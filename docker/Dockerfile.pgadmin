@@ -1,0 +1,6 @@
+FROM dpage/pgadmin4
+
+COPY --chown=5050:5050 postgres/pgpassfile /pgadmin4/pgpassfile
+COPY --chown=5050:5050 postgres/servers.json /pgadmin4/servers.json
+
+RUN chmod 600 /pgadmin4/pgpassfile

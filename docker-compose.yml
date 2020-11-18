@@ -1,0 +1,65 @@
+# We use version 2 due to version 3 not supporting depends_on.condition
+# Check this discussion https://github.com/docker/compose/issues/374
+
+version: "2.4"
+services:
+  db:
+    image: "postgres:13.1"
+    container_name: enotes_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data/enotes/
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U postgres
+      interval: 5s
+      timeout: 2s
+      retries: 10
+  pg_admin:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.pgadmin
+    container_name: enotes_pgadmin
+    ports:
+      - "15432:80"
+    environment:
+      GUNICORN_THREADS: 1
+      PGADMIN_DEFAULT_EMAIL: enotes@localhost
+      PGADMIN_DEFAULT_PASSWORD: enotes_postgres
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+    depends_on:
+      db:
+        condition: service_healthy
+  backend:
+    build: ./backend
+    image: enotes_backend
+    container_name: enotes_backend
+    command: npm run dev
+    environment:
+      DB_HOST: enotes_db
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: curl -s -f http://enotes_backend:5000/health
+      interval: 5s
+      timeout: 1s
+      retries: 5
+
+# Data persistence
+# Volumes can't be stored inside workspace due to permission issues
+volumes:
+  database:
+    name: enotes_database

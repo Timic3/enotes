@@ -1,0 +1,14 @@
+{
+  "Servers": {
+      "1": {
+          "Name": "ENotes",
+          "Group": "Servers",
+          "Host": "enotes_db",
+          "Port": 5432,
+          "MaintenanceDB": "postgres",
+          "Username": "postgres",
+          "PassFile": "/pgadmin4/pgpassfile",
+          "SSLMode": "prefer"
+      }
+  }
+}
