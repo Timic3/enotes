@@ -14,21 +14,21 @@
     </v-app-bar>
 
     <v-main>
-      <Login/>
+      <Main/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-//import Main from './components/Main';
-import Login from './views/login'
+import Main from './components/Main';
+//import Login from './views/login'
 
 export default {
   name: 'App',
 
   components: {
-    //Main,
-    Login,
+    Main,
+    //Login,
   },
 
   data: () => ({
