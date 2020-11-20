@@ -42,6 +42,8 @@ services:
     image: enotes_frontend
     container_name: enotes_frontend
     command: npm run serve
+    volumes:
+      - ./frontend:/usr/src/frontend
     ports:
       - "8080:8080"
     depends_on:
@@ -56,12 +58,14 @@ services:
     build: ./backend
     image: enotes_backend
     container_name: enotes_backend
-    command: npm run dev
+    command: npm run dev -- --legacy-watch
     environment:
       DB_HOST: enotes_db
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
+    volumes:
+      - ./backend:/usr/src/backend
     ports:
       - "5000:5000"
     depends_on:
