@@ -1,4 +1,4 @@
-<template >
+<template>
 	<v-container>
 		<v-row>
             <v-col cols="12">
@@ -60,7 +60,7 @@
 
 <script>
 	export default {
-		name: 'HelloWorld',
+		name: 'Main',
 
 		data: () => ({
 			notes: [

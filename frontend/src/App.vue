@@ -14,19 +14,21 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <Login/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+//import Main from './components/Main';
+import Login from './views/login'
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    //Main,
+    Login,
   },
 
   data: () => ({
