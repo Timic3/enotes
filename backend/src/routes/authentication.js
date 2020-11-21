@@ -2,8 +2,7 @@ import Router from '@koa/router';
 import { Sequelize } from 'sequelize';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-
-//secret key: 6LeecOcZAAAAAPH1iHj3m7BoCk1hDxGwvnPHq_yL
+import axios from 'axios';
 
 import db from '../models';
 
@@ -108,8 +107,23 @@ router.post('/register', async (ctx) => {
   }
 
   // TODO: Unicode emails and usernames?
-  // TODO: Add Google reCAPTCHA
   // TODO: Add email verification
+
+  const captchaResponse = await axios.post('https://www.google.com/recaptcha/api/siteverify', {
+    remoteip: ctx.ip
+  }, {
+    params: {
+      secret: '6LeecOcZAAAAAPH1iHj3m7BoCk1hDxGwvnPHq_yL',
+      response: body.captcha
+    }
+  })
+  if (!captchaResponse.data.success) {
+    ctx.body = {
+      success: false,
+      message: 'Captcha verification failed!'
+    };
+    return;
+  }
 
   try {
     const user = await db.User.create({ username: body.username, email: body.email, password: body.password });
@@ -122,10 +136,13 @@ router.post('/register', async (ctx) => {
       success: false,
       message: ''
     };
-    if (e.fields.username) {
+    if (e.fields.username || e.fields.includes('username')) {
       ctx.body.message = 'Username already exists in our database!';
-    } else if (e.fields.email) {
+    } else if (e.fields.email || e.fields.includes('email')) {
       ctx.body.message = 'Email already exists in our database!';
+    } else {
+      ctx.body.message = 'An error has occurred, please try again!';
+      console.error(e);
     }
   }
 });

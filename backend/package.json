@@ -25,7 +25,9 @@
   },
   "homepage": "https://github.com/Timic3/enotes#readme",
   "dependencies": {
+    "@koa/cors": "^3.1.0",
     "@koa/router": "^10.0.0",
+    "axios": "^0.21.0",
     "bcrypt": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
@@ -40,6 +42,7 @@
     "@babel/core": "^7.12.3",
     "@babel/node": "^7.12.6",
     "@babel/preset-env": "^7.12.1",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.6",
+    "sqlite3": "^5.0.0"
   }
 }

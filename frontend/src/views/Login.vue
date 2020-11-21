@@ -25,15 +25,12 @@
           @click:append="show = !show"
           class="mb-3"
         ></v-text-field>
-        
-        <vue-recaptcha sitekey="6LeecOcZAAAAAJHGwAr2odgqZesq0Bu5hOiPCMLr" :loadRecaptchaScript="true"></vue-recaptcha>
 
         <v-btn
           :disabled="!valid"
           color="success"
           class="mr-4"
-          @click="validate"
-          to="Main"
+          @click="loginRequest"
         >
           Login
         </v-btn>
@@ -102,14 +99,22 @@
           :rules="[v => !!v || 'You must agree to continue!']"
           label="Do you agree to our terms?"
           required
-          class="mb-3"
         ></v-checkbox>
+        
+        <vue-recaptcha
+          sitekey="6LeecOcZAAAAAJHGwAr2odgqZesq0Bu5hOiPCMLr"
+          :loadRecaptchaScript="true"
+          @verify="verifyCaptcha"
+          @expired="expiredCaptcha"
+          class="mb-7"
+        ></vue-recaptcha>
 
         <v-btn
-          :disabled="!valid"
+          :loading="loading"
+          :disabled="!valid || !captchaToken"
           color="success"
           class="mr-4"
-          @click="validate"
+          @click="registerRequest"
         >
           Confirm
         </v-btn>
@@ -136,6 +141,7 @@
 
 <script>
 import VueRecaptcha from 'vue-recaptcha';
+import axios from 'axios';
 
 export default {
   components: { VueRecaptcha },
@@ -143,6 +149,8 @@ export default {
   data: () => ({
     login: true,
     valid: false,
+    loading: false,
+    captchaToken: false,
     username: '',
     password: '',
     nameRules: [
@@ -176,9 +184,6 @@ export default {
   },
 
   methods: {
-    validate () {
-      //this.$refs.form.validate()
-    },
     reset () {
       this.$refs.form.reset()
     },
@@ -186,8 +191,45 @@ export default {
       this.$refs.form.resetValidation()
     },
     change (){
-      this.login = !this.login;
+      this.login = !this.login
     },
+    async registerRequest() {
+      if (this.$refs.form.validate()) {
+        this.loading = true
+        try {
+          if (this.captchaToken) {
+            const response = await axios.post('http://localhost:5000/authentication/register', {
+              username: this.usernameReg,
+              email: this.email,
+              password: this.passwordReg,
+              captcha: this.captchaToken
+            })
+            // TODO: Notification system
+            this.login = true
+            console.log(response.data)
+          } else {
+            // TODO: Notification system
+            console.error('Captcha verification failed!')
+          }
+          this.loading = false
+        } catch (e) {
+          // TODO: Notification system
+          console.error(e.data)
+          this.loading = false
+        }
+      }
+    },
+    async loginRequest() {
+      if (this.$refs.form.validate()) {
+        console.log('Login request')
+      }
+    },
+    verifyCaptcha(token) {
+      this.captchaToken = token
+    },
+    expiredCaptcha() {
+      this.captchaToken = false
+    }
 
   },
 }

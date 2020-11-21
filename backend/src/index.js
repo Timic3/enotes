@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import helmet from 'koa-helmet';
+import cors from '@koa/cors';
 import bodyParser from 'koa-body';
 
 import authentication from './routes/authentication';
@@ -25,6 +26,7 @@ router.get('/health', async (ctx) => {
 });
 
 app.use(helmet());
+app.use(cors());
 app.use(bodyParser());
 
 app.use(router.routes(), router.allowedMethods());
