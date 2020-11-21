@@ -4,13 +4,12 @@
       <v-form
         ref="form"
         v-model="valid"
-        lazy-validation
       >
         <v-text-field
           v-model="username"
           :counter="10"
           :rules="nameRules"
-          label="Userame"
+          label="Username"
           required
         ></v-text-field>
 
@@ -32,6 +31,7 @@
           color="success"
           class="mr-4"
           @click="validate"
+          to="Main"
         >
           Login
         </v-btn>
@@ -57,11 +57,10 @@
       <v-form
         ref="form"
         v-model="valid"
-        lazy-validation
       >
         <v-text-field
           v-model="usernameReg"
-          :counter="10"
+          :counter="20"
           :rules="nameRules"
           label="Userame"
           required
@@ -80,9 +79,9 @@
           :type="show ? 'text' : 'password'"
           name="input-10-1"
           label="Password"
-          hint="At least 8 characters"
           counter
           class="mb-3"
+          required
         ></v-text-field>
 
         <v-text-field
@@ -91,9 +90,9 @@
           :type="show ? 'text' : 'password'"
           name="input-10-2"
           label="Confirm password"
-          hint="At least 8 characters"
           counter
           class="mb-3"
+          required
         ></v-text-field>
 
         <v-checkbox
@@ -137,17 +136,18 @@
 export default {
   data: () => ({
     login: true,
-    valid: true,
+    valid: false,
     username: '',
     password: '',
     nameRules: [
       v => !!v || 'Name is required',
-      v => (v && v.length <= 10) || 'Name must be less than 10 characters',
+      v => (v && v.length <= 20 && v.length > 3) || 'Username length can only be between 3 and 20!',
     ],
 
     email: '',
     emailRules: [
       v => !!v || 'E-mail is required',
+      v => (v && v.length <= 256 && v.length > 5) || 'Email length can only be between 5 and 256!',
       v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
     select: null,
@@ -158,20 +158,20 @@ export default {
     passwordReg: '',
     confirmpassword: '',
     rules: {
-      required: value => !!value || 'Required.',
-      min: v => v.length >= 8 || 'Min 8 characters',
+      required: value => !!value || 'Password is required.',
+      min: v => v.length >= 8 && v.length < 125 || 'Password length can only be between 8 and 125!',
     },
   }),
 
   computed: {
     passwordConfirmationRule() {
-      return () => (this.password === this.confirmpassword) || 'Password must match'
-    }
+      return () => (this.passwordReg === this.confirmpassword) || 'Password must match'
+    },
   },
 
   methods: {
     validate () {
-      this.$refs.form.validate()
+      //this.$refs.form.validate()
     },
     reset () {
       this.$refs.form.reset()

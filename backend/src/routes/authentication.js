@@ -88,10 +88,10 @@ router.post('/register', async (ctx) => {
     return;
   }
 
-  if (body.email.length < 3 || body.email.length > 256) {
+  if (body.email.length < 5 || body.email.length > 256) {
     ctx.body = {
       success: false,
-      message: 'Email length can only be between 3 and 256!'
+      message: 'Email length can only be between 5 and 256!'
     };
     return;
   }
