@@ -27,9 +27,14 @@
   "homepage": "https://github.com/Timic3/enotes#readme",
   "dependencies": {
     "@koa/router": "^10.0.0",
+    "bcrypt": "^5.0.0",
+    "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
     "koa-body": "^4.2.0",
-    "koa-helmet": "^6.0.0"
+    "koa-helmet": "^6.0.0",
+    "pg": "^8.5.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.12.1",

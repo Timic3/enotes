@@ -5,8 +5,19 @@ import bodyParser from 'koa-body';
 import authentication from './routes/authentication';
 import Router from '@koa/router';
 
+import db from './models';
+
+db.sequelize.authenticate()
+  .then(() => console.log('Connected to the database.'))
+  .catch(console.error);
+
+db.sequelize.sync(/*{ force: true }*/)
+  .then(() => console.log('Database synced.'))
+  .catch(console.error);
+
 const app = new Koa();
 const router = new Router();
+
 router.get('/health', async (ctx) => {
   ctx.body = {
     success: true
@@ -16,7 +27,7 @@ router.get('/health', async (ctx) => {
 app.use(helmet());
 app.use(bodyParser());
 
-app.use(authentication.routes(), authentication.allowedMethods());
 app.use(router.routes(), router.allowedMethods());
+app.use(authentication.routes(), authentication.allowedMethods());
 
 app.listen(5000, console.log('Server started on port 5000.'));
