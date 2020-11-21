@@ -2,6 +2,14 @@
   "name": "@enotes/frontend",
   "version": "0.1.0",
   "private": true,
+  "contributors": [
+    {
+      "name": "Timotej Manfreda"
+    },
+    {
+      "name": "Jani Kačič"
+    }
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

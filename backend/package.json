@@ -1,7 +1,6 @@
 {
   "name": "@enotes/backend",
   "version": "1.0.0",
-  "description": "",
   "main": "src/index.js",
   "scripts": {
     "start": "babel-node src/index.js",
