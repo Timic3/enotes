@@ -25,6 +25,8 @@
           @click:append="show = !show"
           class="mb-3"
         ></v-text-field>
+        
+        <vue-recaptcha sitekey="6LeecOcZAAAAAJHGwAr2odgqZesq0Bu5hOiPCMLr" :loadRecaptchaScript="true"></vue-recaptcha>
 
         <v-btn
           :disabled="!valid"
@@ -133,7 +135,11 @@
 </template>
 
 <script>
+import VueRecaptcha from 'vue-recaptcha';
+
 export default {
+  components: { VueRecaptcha },
+
   data: () => ({
     login: true,
     valid: false,
@@ -182,6 +188,7 @@ export default {
     change (){
       this.login = !this.login;
     },
+
   },
 }
 </script>

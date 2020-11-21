@@ -3,6 +3,8 @@ import { Sequelize } from 'sequelize';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+//secret key: 6LeecOcZAAAAAPH1iHj3m7BoCk1hDxGwvnPHq_yL
+
 import db from '../models';
 
 const router = new Router({ prefix: '/authentication' });
