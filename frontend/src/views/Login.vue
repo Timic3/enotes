@@ -136,10 +136,33 @@
         </v-btn>
       </v-form>
     </v-card>
+    <v-col 
+      md="6"
+      offset-md="3"
+    >
+      <v-alert
+        dense
+        text
+        type="success"
+        v-if="isSuccessVisible"
+      >
+        {{ successText }}
+      </v-alert>
+
+      <v-alert
+        dense
+        text
+        type="error"
+        v-if="isErrorVisible"
+      >
+        {{ errorText }}
+      </v-alert>
+    </v-col >
   </div>
 </template>
 
 <script>
+//v-if="isSuccessVisible"
 import VueRecaptcha from 'vue-recaptcha';
 import axios from 'axios';
 
@@ -175,6 +198,11 @@ export default {
       required: value => !!value || 'Password is required.',
       min: v => v.length >= 8 && v.length < 125 || 'Password length can only be between 8 and 125!',
     },
+
+    isSuccessVisible: false,
+    successText: '',
+    isErrorVisible: false,
+    errorText: '',
   }),
 
   computed: {
@@ -204,16 +232,21 @@ export default {
               password: this.passwordReg,
               captcha: this.captchaToken
             })
-            // TODO: Notification system
-            this.login = true
-            console.log(response.data)
+            if(response.data.success){
+              this.notifySuccess(response.data.message);
+              this.login = true;
+            }
+            else{
+              this.notifyError(response.data.message);
+            }
+            console.log(response.data);
           } else {
-            // TODO: Notification system
-            console.error('Captcha verification failed!')
+            this.notifyError('Captcha verification failed!');
+            console.error('Captcha verification failed!');
           }
           this.loading = false
         } catch (e) {
-          // TODO: Notification system
+          this.notifyError(e.data);
           console.error(e.data)
           this.loading = false
         }
@@ -229,8 +262,17 @@ export default {
     },
     expiredCaptcha() {
       this.captchaToken = false
+    },
+    notifySuccess(message){
+      this.isSuccessVisible = true;
+      this.isErrorVisible = false;
+      this.successText = message;
+    },
+    notifyError(message){
+      this.isSuccessVisible = false;
+      this.isErrorVisible = true;
+      this.errorText = message;
     }
-
   },
 }
 </script>
