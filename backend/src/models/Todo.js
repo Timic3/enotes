@@ -28,6 +28,7 @@ export default class Todo extends Sequelize.Model {
     this.belongsTo(models.Note, {
       foreignKey: 'noteId',
       allowNull: true,
+      onDelete: 'CASCADE'
     });
   }
 }

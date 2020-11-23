@@ -25,7 +25,6 @@ router.post('/get', async (ctx) => {
         raw: true
     });
 
-    console.log(notes);
     ctx.body = {
         array: notes
     };
@@ -43,7 +42,6 @@ router.post('/gettodo', async (ctx) => {
       raw: true
   });
 
-  console.log(todos);
   ctx.body = {
       array: todos
   };
@@ -52,7 +50,6 @@ router.post('/gettodo', async (ctx) => {
 
 router.post('/create', async (ctx) => {
     const body = ctx.request.body;
-    console.log(body);
     if( body.type == "Normal"){
       await db.Note.create({
         title: body.title,
@@ -75,13 +72,30 @@ router.post('/create', async (ctx) => {
           checked: false,
           noteId: note.id
         });
-        console.log(td);
       });
     }
 
     ctx.body = {
       message: "something works"
     };
+  return
+});
+
+router.post('/removenote', async (ctx) => {
+  const body = ctx.request.body;
+  console.log(body.noteid);
+
+  await db.Note.destroy({
+      where: {
+          noteId: body.noteid
+      }
+  }).catch((err)=>{
+    console.log(err)
+  });
+
+  ctx.body = {
+      message: "removed"
+  };
   return
 });
 

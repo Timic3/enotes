@@ -20,6 +20,8 @@ export default class Reminder extends Sequelize.Model {
       })
   }
   static associate(models) {
-    this.belongsTo(models.Note);
+    this.belongsTo(models.Note, {
+      onDelete: 'CASCADE'
+    });
   }
 }

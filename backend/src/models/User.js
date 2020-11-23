@@ -32,6 +32,7 @@ export default class User extends Sequelize.Model {
   static associate(models) {
     this.hasMany(models.Note, {
       foreignKey: 'noteId',
+      onDelete: 'CASCADE'
     });
   }
 }

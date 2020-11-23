@@ -48,7 +48,7 @@
             <v-btn
               color="red lighten-1"
               text
-              @click="note.sh=false"
+              @click="removeNote(note.id)"
             >
               Remove
             </v-btn>
@@ -181,7 +181,7 @@ export default {
 
   methods:{
     async loadNotes(){
-      const response = await axios.post('http://localhost:5000/notes/get', {
+      const response = await axios.post('http://localhost:15000/notes/get', {
         userid: 1,
       })
       const data = response.data.array;
@@ -189,6 +189,7 @@ export default {
       data.forEach(async element => {
         if(element.type == "Normal"){
           this.notes.push({
+            id: element.id,
             title: element.title,
             type: element.type,
             text: element.text,
@@ -197,7 +198,7 @@ export default {
           });
         }
         else{
-          const responsetodo = await axios.post('http://localhost:5000/notes/gettodo', {
+          const responsetodo = await axios.post('http://localhost:15000/notes/gettodo', {
             noteid: element.id,
           })
           const itms = []
@@ -206,6 +207,7 @@ export default {
           });
           console.log(itms);
           this.notes.push({
+            id: element.id,
             title: element.title,
             type: element.type,
             items: itms,
@@ -219,7 +221,7 @@ export default {
       if(this.todo === "") this.type = "Normal";
       else this.type = "todo";
 
-      const response = await axios.post('http://localhost:5000/notes/create', {
+      const response = await axios.post('http://localhost:15000/notes/create', {
         userid: 1,
         title: this.title,
         type: this.type,
@@ -229,6 +231,14 @@ export default {
       this.notes = [];
       this.loadNotes();
       console.log(response);
+    },
+    async removeNote(idnote){
+      const response = await axios.post('http://localhost:15000/notes/removenote', {
+        noteid: idnote
+      });
+      console.log(response);
+      this.notes = [];
+      this.loadNotes();
     }
   },
 

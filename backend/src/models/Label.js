@@ -23,6 +23,7 @@ export default class Label extends Sequelize.Model {
     this.hasMany(models.Note, {
       foreignKey: 'noteId',
       allowNull: true,
+      onDelete: 'CASCADE'
     });
   }
 }

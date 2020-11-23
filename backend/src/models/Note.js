@@ -28,15 +28,21 @@ export default class Note extends Sequelize.Model {
     this.belongsTo(models.User, {
       foreignKey: 'userId',
       allowNull: false,
+      onDelete: 'CASCADE'
     });
     this.hasMany(models.Todo, {
       foreignKey: 'todoId',
       allowNull: false,
+      onDelete: 'CASCADE'
+    }
+    );
+    this.belongsTo(models.Label, {
+      onDelete: 'CASCADE'
     });
-    this.belongsTo(models.Label);
     this.hasMany(models.Reminder, {
       foreignKey: 'opomnikId',
       allowNull: true,
+      onDelete: 'CASCADE'
     });
   }
 }

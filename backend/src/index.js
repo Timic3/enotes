@@ -17,24 +17,6 @@ db.sequelize.authenticate()
 db.sequelize.sync(/*{ force: true }*/)
   .then(async () =>{
     console.log('Database synced.')
-    await db.User.create({
-        id: 1,
-        username: "test1234",
-        email: "test1234@test.test",
-        password: "test1234",
-        /*notes:[
-          { id: 1, title:'test1', text: 'This text is test text.'},
-          { id: 2, title:'test2', text: 'This text is test2 text.'}
-        ]*/
-      }, 
-      /*{
-        include:[{ association: db.Note, as: 'notes' }]
-      }*/
-      );
-
-    await db.Note.create({
-      id: 1, title:'test1', text: 'This text is test text.', type: 'Normal', userId: 1
-    })
   })
   .catch(console.error);
 
