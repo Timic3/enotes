@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <h1>Welcome back, {{ user.username }}</h1>
     <v-row>
       <v-col cols="12">
         <v-btn
@@ -195,5 +196,10 @@ export default {
     todo: '',
     date: '',
   }),
+  computed: {
+    user() {
+      return this.$store.state.user;
+    }
+  }
 }
 </script>

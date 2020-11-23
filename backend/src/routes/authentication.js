@@ -53,7 +53,11 @@ router.post('/login', async (ctx) => {
     ctx.body = {
       success: true,
       message: `Welcome back, ${user.username}!`,
-      token
+      user: {
+        id: user.id,
+        username: user.username,
+        token: token
+      }
     };
   } else {
     ctx.body = {

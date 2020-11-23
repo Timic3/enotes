@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Oznaka extends Sequelize.Model {
+export default class Label extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
       prioriteta: {

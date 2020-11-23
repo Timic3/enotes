@@ -1,5 +1,5 @@
 module.exports = {
-  development: {
+  production: {
     dialect: 'sqlite',
     storage: ':memory:',
     dialectOptions: {
@@ -12,11 +12,12 @@ module.exports = {
       idle: 10000,
     },
   },
-  production: {
+  development: {
     host: 'localhost',
     username: 'postgres',
     password: 'postgres',
     database: 'postgres',
+    port: 25432,
     dialect: 'postgres',
     dialectOptions: {
       timezone: 'Etc/GMT0',

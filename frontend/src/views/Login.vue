@@ -27,6 +27,7 @@
         ></v-text-field>
 
         <v-btn
+          :loading="loading"
           :disabled="!valid"
           color="success"
           class="mr-4"
@@ -102,6 +103,7 @@
         ></v-checkbox>
         
         <vue-recaptcha
+          ref="recaptcha"
           sitekey="6LeecOcZAAAAAJHGwAr2odgqZesq0Bu5hOiPCMLr"
           :loadRecaptchaScript="true"
           @verify="verifyCaptcha"
@@ -209,6 +211,9 @@ export default {
     passwordConfirmationRule() {
       return () => (this.passwordReg === this.confirmpassword) || 'Password must match'
     },
+    loggedIn() {
+      return this.$store.state.status.loggedIn;
+    }
   },
 
   methods: {
@@ -226,35 +231,63 @@ export default {
         this.loading = true
         try {
           if (this.captchaToken) {
-            const response = await axios.post('http://localhost:5000/authentication/register', {
+            /*const response = await axios.post('http://localhost:15000/authentication/register', {
               username: this.usernameReg,
               email: this.email,
               password: this.passwordReg,
               captcha: this.captchaToken
-            })
-            if(response.data.success){
-              this.notifySuccess(response.data.message);
+            })*/
+            const response = await this.$store.dispatch('register', {
+              username: this.usernameReg,
+              email: this.email,
+              password: this.passwordReg,
+              captcha: this.captchaToken
+            });
+            if(response.success){
+              this.notifySuccess(response.message);
               this.login = true;
             }
             else{
-              this.notifyError(response.data.message);
+              this.notifyError(response.message);
+              this.$refs.recaptcha.reset();
             }
-            console.log(response.data);
           } else {
             this.notifyError('Captcha verification failed!');
+            this.$refs.recaptcha.reset();
             console.error('Captcha verification failed!');
           }
           this.loading = false
         } catch (e) {
-          this.notifyError(e.data);
-          console.error(e.data)
+          this.notifyError(e.message);
+          this.$refs.recaptcha.reset();
           this.loading = false
         }
       }
     },
     async loginRequest() {
       if (this.$refs.form.validate()) {
-        console.log('Login request')
+        this.loading = true
+        try {
+          /*const response = await axios.post('http://localhost:15000/authentication/login', {
+            username: this.username,
+            password: this.password
+          })*/
+          const response = await this.$store.dispatch('login', {
+            username: this.username,
+            password: this.password
+          });
+          if(response.success){
+            this.notifySuccess(response.message);
+            this.$router.push('Main');
+          }
+          else{
+            this.notifyError(response.message);
+          }
+          this.loading = false
+        } catch (e) {
+          this.notifyError(e.message);
+          this.loading = false
+        }
       }
     },
     verifyCaptcha(token) {
@@ -274,5 +307,10 @@ export default {
       this.errorText = message;
     }
   },
+  created() {
+    if (this.loggedIn) {
+      this.$router.push('Main');
+    }
+  }
 }
 </script>

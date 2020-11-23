@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize';
 
-export default class Opomnik extends Sequelize.Model {
+export default class Reminder extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
       datum_opomnika: {

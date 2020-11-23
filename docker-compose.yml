@@ -12,7 +12,7 @@ services:
       PGDATA: /var/lib/postgresql/data/enotes/
       ALLOW_IP_RANGE: 0.0.0.0/0
     ports:
-      - "5432:5432"
+      - "25432:5432"
     restart: unless-stopped
     volumes:
       - database:/var/lib/postgresql/data
@@ -42,8 +42,8 @@ services:
     image: enotes_frontend
     container_name: enotes_frontend
     command: npm run serve
-    volumes:
-      - ./frontend:/usr/src/frontend
+    # volumes:
+    #   - ./frontend:/usr/src/frontend
     ports:
       - "8080:8080"
     depends_on:
@@ -64,8 +64,8 @@ services:
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
-    volumes:
-      - ./backend:/usr/src/backend
+    # volumes:
+    #   - ./backend:/usr/src/backend
     ports:
       - "5000:5000"
     depends_on:
