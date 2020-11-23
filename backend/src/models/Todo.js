@@ -25,6 +25,9 @@ export default class Todo extends Sequelize.Model {
     })
   }
   static associate(models) {
-    this.belongsTo(models.Note);
+    this.belongsTo(models.Note, {
+      foreignKey: 'noteId',
+      allowNull: true,
+    });
   }
 }
