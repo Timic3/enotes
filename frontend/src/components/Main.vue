@@ -6,6 +6,13 @@
         <v-btn
           color="green lighten-1"
           text
+          @click="logout"
+        >
+          Logout
+        </v-btn>
+        <v-btn
+          color="green lighten-1"
+          text
           @click="add=true"
         >
           Add note
@@ -182,10 +189,9 @@ export default {
   methods:{
     async loadNotes(){
       const response = await axios.post('http://localhost:15000/notes/get', {
-        userid: 1,
+        userid: this.user.id,
       })
       const data = response.data.array;
-      console.log(data);
       data.forEach(async element => {
         if(element.type == "Normal"){
           this.notes.push({
@@ -205,7 +211,6 @@ export default {
           responsetodo.data.array.forEach(async element => {
             itms.push(element);
           });
-          console.log(itms);
           this.notes.push({
             id: element.id,
             title: element.title,
@@ -222,7 +227,7 @@ export default {
       else this.type = "todo";
 
       const response = await axios.post('http://localhost:15000/notes/create', {
-        userid: 1,
+        userid: this.user.id,
         title: this.title,
         type: this.type,
         text: this.text,
@@ -239,6 +244,10 @@ export default {
       console.log(response);
       this.notes = [];
       this.loadNotes();
+    },
+    logout(){
+      this.$store.dispatch('logout')
+      this.$router.push('/')
     }
   },
 

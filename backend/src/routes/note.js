@@ -87,7 +87,7 @@ router.post('/removenote', async (ctx) => {
 
   await db.Note.destroy({
       where: {
-          noteId: body.noteid
+          id: body.noteid
       }
   }).catch((err)=>{
     console.log(err)
