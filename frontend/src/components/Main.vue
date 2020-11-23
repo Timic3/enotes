@@ -74,10 +74,9 @@
                 <v-divider></v-divider>
                 <v-list flat subheader three-line>
                   <v-list-item-group
-                    v-model="settings"
                     multiple
                     active-class=""
-                    v-for="item in note.items" :key="item"
+                    v-for="item in note.items" :key="item[0]"
                   >
                     <v-list-item>
                       <template v-slot:default="{ active }">
@@ -192,6 +191,9 @@ export default {
     ],
     add: false,
     reminder: false,
+    title: '',
+    todo: '',
+    date: '',
   }),
 }
 </script>

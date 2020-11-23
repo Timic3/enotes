@@ -28,8 +28,8 @@ export default class Note extends Sequelize.Model {
       foreignKey: 'todoId',
       allowNull: true,
     });
-    this.belongsTo(models.Oznaka);
-    this.hasMany(models.Opomnik, {
+    this.belongsTo(models.Label);
+    this.hasMany(models.Reminder, {
       foreignKey: 'opomnikId',
       allowNull: true,
     });
