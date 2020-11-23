@@ -71,7 +71,7 @@
                   {{ note.text }}
                 </v-card-text>
               </div>
-              <div  v-if="note.type=='TODO'">
+              <div  v-if="note.type=='Todo'">
                 <v-divider></v-divider>
                 <v-list flat subheader three-line>
                   <v-list-item-group
@@ -86,8 +86,8 @@
                         </v-list-item-action>
 
                         <v-list-item-content>
-                          <v-list-item-title>{{ item[0] }}</v-list-item-title>
-                          <v-list-item-subtitle>{{ item[1] }}</v-list-item-subtitle>
+                          <v-list-item-title>{{ item.title }}</v-list-item-title>
+                          <v-list-item-subtitle>{{ item.text }}</v-list-item-subtitle>
                         </v-list-item-content>
                       </template>
                     </v-list-item>
@@ -108,6 +108,7 @@
           label="title"
         ></v-text-field>
         <v-textarea
+          v-model="text"
           name="text"
           label="text"
         ></v-textarea>
@@ -123,7 +124,7 @@
         <v-btn
           color="green lighten-1"
           text
-          @click="add=false"
+          @click="saveNote"
         >
           Add
         </v-btn>
@@ -156,50 +157,83 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   name: 'Main',
 
   data: () => ({
-    notes: [
-      {
-        title: 'Note1',
-        type: 'Normal',
-        text: 'Description of note1',
-        show: false,
-        sh:true,
-      },
-      {
-        title: 'Note2',
-        type: 'Normal',
-        text: 'Description of note2',
-        show: false,
-        sh:true,
-      },
-      {
-        title: 'TODO Note1',
-        type: 'TODO',
-        items: [["Clean room","This is description of Clean room"], ["Wash dishes", "This is description of Wash dishes"], ["Do your homework", "This is description of Do your homework"]],
-        show: false,
-        sh:true,
-      },
-      {
-        title: 'Note3',
-        type: 'Normal',
-        text: 'Description of note3',
-        show: false,
-        sh:true,
-      },
-    ],
+    notes: [],
     add: false,
     reminder: false,
     title: '',
+    text: '',
     todo: '',
     date: '',
+    type: '',
   }),
+
   computed: {
     user() {
       return this.$store.state.user;
     }
-  }
+  },
+
+  methods:{
+    async loadNotes(){
+      const response = await axios.post('http://localhost:5000/notes/get', {
+        userid: 1,
+      })
+      const data = response.data.array;
+      console.log(data);
+      data.forEach(async element => {
+        if(element.type == "Normal"){
+          this.notes.push({
+            title: element.title,
+            type: element.type,
+            text: element.text,
+            show: false,
+            sh: true
+          });
+        }
+        else{
+          const responsetodo = await axios.post('http://localhost:5000/notes/gettodo', {
+            noteid: element.id,
+          })
+          const itms = []
+          responsetodo.data.array.forEach(async element => {
+            itms.push(element);
+          });
+          console.log(itms);
+          this.notes.push({
+            title: element.title,
+            type: element.type,
+            items: itms,
+            show: false,
+            sh: true
+          });
+        }
+      });
+    },
+    async saveNote(){
+      if(this.todo === "") this.type = "Normal";
+      else this.type = "todo";
+
+      const response = await axios.post('http://localhost:5000/notes/create', {
+        userid: 1,
+        title: this.title,
+        type: this.type,
+        text: this.text,
+        todo: this.todo.split(','),
+      })
+      this.notes = [];
+      this.loadNotes();
+      console.log(response);
+    }
+  },
+
+  created(){
+    this.loadNotes()
+  },
 }
 </script>

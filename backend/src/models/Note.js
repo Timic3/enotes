@@ -13,6 +13,11 @@ export default class Note extends Sequelize.Model {
         allowNull: true,
         unique: false
       },
+      type: {
+        type: Sequelize.STRING(1000),
+        allowNull: false,
+        unique: false
+      },
     }, {
       hooks: {
       },
@@ -26,7 +31,7 @@ export default class Note extends Sequelize.Model {
     });
     this.hasMany(models.Todo, {
       foreignKey: 'todoId',
-      allowNull: true,
+      allowNull: false,
     });
     this.belongsTo(models.Label);
     this.hasMany(models.Reminder, {
