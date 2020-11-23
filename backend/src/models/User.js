@@ -29,4 +29,9 @@ export default class User extends Sequelize.Model {
       sequelize
     })
   }
+  static associate(models) {
+    this.hasMany(models.Note, {
+      foreignKey: 'noteId',
+    });
+  }
 }
