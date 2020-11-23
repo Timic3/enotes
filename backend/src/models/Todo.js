@@ -13,6 +13,11 @@ export default class Todo extends Sequelize.Model {
         allowNull: true,
         unique: false
       },
+      checked: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        unique: false
+      },
     }, {
       hooks: {
       },
