@@ -2,13 +2,13 @@ import Koa from 'koa';
 import helmet from 'koa-helmet';
 import cors from '@koa/cors';
 import bodyParser from 'koa-body';
+import jwt from 'jsonwebtoken';
 
 import authentication from './routes/authentication';
 import note from './routes/note';
 import Router from '@koa/router';
 
 import db from './models';
-import Note from './models/Note';
 
 db.sequelize.authenticate()
   .then(() => console.log('Connected to the database.'))
@@ -35,6 +35,17 @@ app.use(bodyParser());
 
 app.use(router.routes(), router.allowedMethods());
 app.use(authentication.routes(), authentication.allowedMethods());
+
+// Authentication required below this
+app.use(async (ctx, next) => {
+  if (!ctx.header.authorization) ctx.throw(403, 'No token.');
+  try {
+    ctx.request.jwtPayload = jwt.verify(ctx.header.authorization.split(' ')[1], 'PrivateKeysAreOverrated?');
+  } catch (err) {
+    ctx.throw(err.status || 403, err.text);
+  }
+  await next();
+});
 app.use(note.routes(), note.allowedMethods());
 
 app.listen(15000, console.log('Server started on port 15000.'));

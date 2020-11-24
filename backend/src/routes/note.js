@@ -9,11 +9,11 @@ import db from '../models';
 const router = new Router({ prefix: '/notes' });
 
 router.post('/get', async (ctx) => {
-    const body = ctx.request.body;
+    const jwt = ctx.request.jwtPayload;
 
     const notes = await db.Note.findAll({
         where: {
-            userId: body.userid
+            userId: jwt.id
         },
         include:[
             {
@@ -28,12 +28,13 @@ router.post('/get', async (ctx) => {
     ctx.body = {
         array: notes
     };
-    return
 });
 
 router.post('/gettodo', async (ctx) => {
   const body = ctx.request.body;
+  const jwt = ctx.request.jwtPayload;
 
+  // TODO: Authority check
   const todos = await db.Todo.findAll({
       order:[
         ['id', 'ASC'],
@@ -48,16 +49,16 @@ router.post('/gettodo', async (ctx) => {
   ctx.body = {
       array: todos
   };
-  return
 });
 
 router.post('/create', async (ctx) => {
     const body = ctx.request.body;
+    const jwt = ctx.request.jwtPayload;
     if( body.type == "Normal"){
       await db.Note.create({
         title: body.title,
         text: body.text,
-        userId: body.userid,
+        userId: jwt.id,
         type: "Normal"
       })
     }
@@ -65,9 +66,10 @@ router.post('/create', async (ctx) => {
       const note = await db.Note.create({
         title: body.title,
         text: body.text,
-        userId: body.userid,
+        userId: jwt.id,
         type: "Todo"
       })
+      // TODO: Use of transactions
       body.todo.forEach(async element =>{
         const td = await db.Todo.create({
           title: element,
@@ -81,16 +83,16 @@ router.post('/create', async (ctx) => {
     ctx.body = {
       message: "something works"
     };
-  return
 });
 
 router.post('/removenote', async (ctx) => {
   const body = ctx.request.body;
-  console.log(body.noteid);
+  const jwt = ctx.request.jwtPayload;
 
   await db.Note.destroy({
       where: {
-          id: body.noteid
+          id: body.noteid,
+          userId: jwt.id
       }
   }).catch((err)=>{
     console.log(err)
@@ -99,13 +101,14 @@ router.post('/removenote', async (ctx) => {
   ctx.body = {
       message: "removed"
   };
-  return
 });
 
 router.post('/updatetodo', async (ctx) => {
   const body = ctx.request.body;
+  const jwt = ctx.request.jwtPayload;
   console.log(body);
 
+  // TODO: Authority check
   await db.Todo.update({
       checked: body.checked
     },{
@@ -117,7 +120,6 @@ router.post('/updatetodo', async (ctx) => {
   ctx.body = {
       message: "updated"
   };
-  return
 });
 
 export default router;

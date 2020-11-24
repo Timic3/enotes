@@ -190,6 +190,10 @@ export default {
     async loadNotes(){
       const response = await axios.post('http://localhost:15000/notes/get', {
         userid: this.user.id,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
       })
       const data = response.data.array;
       data.forEach(async element => {
@@ -206,6 +210,10 @@ export default {
         else{
           const responsetodo = await axios.post('http://localhost:15000/notes/gettodo', {
             noteid: element.id,
+          }, {
+            headers: {
+              'Authorization': `Bearer ${this.user.token}`
+            }
           })
           const itms = []
           responsetodo.data.array.forEach(async element => {
@@ -232,6 +240,10 @@ export default {
         type: this.type,
         text: this.text,
         todo: this.todo.split(','),
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
       })
       this.notes = [];
       this.loadNotes();
@@ -240,6 +252,10 @@ export default {
     async removeNote(idnote){
       const response = await axios.post('http://localhost:15000/notes/removenote', {
         noteid: idnote
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
       });
       console.log(response);
       this.notes = [];
@@ -249,6 +265,10 @@ export default {
       const response = await axios.post('http://localhost:15000/notes/updatetodo', {
         checked: item.checked,
         todoid: item.id,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
       });
     },
     logout(){
