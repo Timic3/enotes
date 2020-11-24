@@ -94,7 +94,7 @@
 
                         <v-list-item-content>
                           <v-list-item-title>{{ item.title }}</v-list-item-title>
-                          <v-list-item-subtitle>{{ item.text }}</v-list-item-subtitle>
+                          <!--<v-list-item-subtitle>{{ item.text }}</v-list-item-subtitle>-->
                         </v-list-item-content>
                       </template>
                     </v-list-item>
@@ -162,6 +162,22 @@
     </v-overlay>
   </v-container>
 </template>
+
+<style lang="scss" scoped>
+.v-list-item {
+  min-height: 0 !important;
+}
+
+.v-list-item__content {
+  align-self: inherit !important;
+}
+
+.v-list--three-line .v-list-item .v-list-item__action {
+  // margin-top: 0 !important;
+  // margin-bottom: 0 !important;
+  margin-right: 15px !important;
+}
+</style>
 
 <script>
 import axios from 'axios';
