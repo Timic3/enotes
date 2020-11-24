@@ -3,7 +3,7 @@ import Sequelize from 'sequelize';
 export default class Reminder extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      datum_opomnika: {
+      reminderDate: {
         type: Sequelize.DATE(50),
         allowNull: false,
         unique: false
@@ -21,6 +21,8 @@ export default class Reminder extends Sequelize.Model {
   }
   static associate(models) {
     this.belongsTo(models.Note, {
+      foreignKey: 'noteId',
+      allowNull: true,
       onDelete: 'CASCADE'
     });
   }

@@ -3,12 +3,12 @@ import Sequelize from 'sequelize';
 export default class Label extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
-      prioriteta: {
+      priority: {
         type: Sequelize.STRING(50),
         allowNull: false,
         unique: false
       },
-      imeOznake: {
+      name: {
         type: Sequelize.STRING(1000),
         allowNull: true,
         unique: true
@@ -20,8 +20,9 @@ export default class Label extends Sequelize.Model {
     })
   }
   static associate(models) {
-    this.hasMany(models.Note, {
-      foreignKey: 'noteId',
+    this.belongsToMany(models.Note, {
+      foreignKey: 'labelId',
+      through: 'NoteLabels',
       allowNull: true,
       onDelete: 'CASCADE'
     });

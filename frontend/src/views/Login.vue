@@ -62,7 +62,7 @@
           v-model="usernameReg"
           :counter="20"
           :rules="nameRules"
-          label="Userame"
+          label="Username"
           required
         ></v-text-field>
 

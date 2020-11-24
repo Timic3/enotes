@@ -112,12 +112,12 @@
       <v-card class="mx-auto mt-6 pa-6" max-width="800" light>
         <v-text-field
           v-model="title"
-          label="title"
+          label="Title"
         ></v-text-field>
         <v-textarea
           v-model="text"
           name="text"
-          label="text"
+          label="Text"
         ></v-textarea>
         <v-date-picker
           v-model="date"
@@ -126,7 +126,7 @@
         ></v-date-picker>
         <v-text-field
           v-model="todo"
-          label="list items (ex. item1, item2)"
+          label="Items (ex. item1, item2)"
         ></v-text-field>
         <v-btn
           color="green lighten-1"

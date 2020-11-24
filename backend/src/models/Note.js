@@ -31,16 +31,18 @@ export default class Note extends Sequelize.Model {
       onDelete: 'CASCADE'
     });
     this.hasMany(models.Todo, {
-      foreignKey: 'todoId',
+      foreignKey: 'noteId',
       allowNull: false,
-      onDelete: 'CASCADE'
-    }
-    );
-    this.belongsTo(models.Label, {
       onDelete: 'CASCADE'
     });
     this.hasMany(models.Reminder, {
-      foreignKey: 'opomnikId',
+      foreignKey: 'noteId',
+      allowNull: true,
+      onDelete: 'CASCADE'
+    });
+    this.belongsToMany(models.Label, {
+      foreignKey: 'noteId',
+      through: 'NoteLabels',
       allowNull: true,
       onDelete: 'CASCADE'
     });
