@@ -23,15 +23,15 @@
           text
         >
           Calendar
-        </v-btn>-->
+        </v-btn>
         <v-btn
           color="red lighten-1"
           text
         >
           Clear
-        </v-btn>
+        </v-btn>-->
       </v-col>
-      <div v-for="note in notes" :key="note.title" class="ma-lg-1 ma-md-1" >
+      <div v-for="note in notes" :key="note.title" class="ma-lg-1 ma-md-1 ma-sm-3 ma-xs-5" >
         <v-card
           elevation="1" 
           outlined
@@ -89,7 +89,7 @@
                     <v-list-item>
                       <template v-slot:default="{ active }">
                         <v-list-item-action>
-                          <v-checkbox :input-value="active"></v-checkbox>
+                          <v-checkbox :input-value="active" v-model="item.checked" @click="itemCheck(item)"></v-checkbox>
                         </v-list-item-action>
 
                         <v-list-item-content>
@@ -244,6 +244,12 @@ export default {
       console.log(response);
       this.notes = [];
       this.loadNotes();
+    },
+    async itemCheck(item){
+      const response = await axios.post('http://localhost:15000/notes/updatetodo', {
+        checked: item.checked,
+        todoid: item.id,
+      });
     },
     logout(){
       this.$store.dispatch('logout')

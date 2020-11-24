@@ -35,10 +35,13 @@ router.post('/gettodo', async (ctx) => {
   const body = ctx.request.body;
 
   const todos = await db.Todo.findAll({
+      order:[
+        ['id', 'ASC'],
+      ],
       where: {
           noteId: body.noteid
       },
-      attributes: ['title', 'text'],
+      attributes: ['id', 'title', 'text', 'checked'],
       raw: true
   });
 
@@ -95,6 +98,24 @@ router.post('/removenote', async (ctx) => {
 
   ctx.body = {
       message: "removed"
+  };
+  return
+});
+
+router.post('/updatetodo', async (ctx) => {
+  const body = ctx.request.body;
+  console.log(body);
+
+  await db.Todo.update({
+      checked: body.checked
+    },{
+      where: {
+          id: body.todoid
+      }
+  });
+
+  ctx.body = {
+      message: "updated"
   };
   return
 });
