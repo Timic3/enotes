@@ -164,7 +164,6 @@
 </template>
 
 <script>
-//v-if="isSuccessVisible"
 import VueRecaptcha from 'vue-recaptcha';
 import axios from 'axios';
 
@@ -209,7 +208,7 @@ export default {
 
   computed: {
     passwordConfirmationRule() {
-      return () => (this.passwordReg === this.confirmpassword) || 'Password must match'
+      return () => (this.passwordReg === this.confirmpassword) || 'Password must match';
     },
     loggedIn() {
       return this.$store.state.status.loggedIn;
@@ -217,37 +216,30 @@ export default {
   },
 
   methods: {
-    reset () {
-      this.$refs.form.reset()
+    reset() {
+      this.$refs.form.reset();
     },
-    resetValidation () {
-      this.$refs.form.resetValidation()
+    resetValidation() {
+      this.$refs.form.resetValidation();
     },
-    change (){
-      this.login = !this.login
+    change() {
+      this.login = !this.login;
     },
     async registerRequest() {
       if (this.$refs.form.validate()) {
-        this.loading = true
+        this.loading = true;
         try {
           if (this.captchaToken) {
-            /*const response = await axios.post('http://localhost:15000/authentication/register', {
-              username: this.usernameReg,
-              email: this.email,
-              password: this.passwordReg,
-              captcha: this.captchaToken
-            })*/
             const response = await this.$store.dispatch('register', {
               username: this.usernameReg,
               email: this.email,
               password: this.passwordReg,
               captcha: this.captchaToken
             });
-            if(response.success){
+            if (response.success) {
               this.notifySuccess(response.message);
               this.login = true;
-            }
-            else{
+            } else {
               this.notifyError(response.message);
               this.$refs.recaptcha.reset();
             }
@@ -256,11 +248,11 @@ export default {
             this.$refs.recaptcha.reset();
             console.error('Captcha verification failed!');
           }
-          this.loading = false
+          this.loading = false;
         } catch (e) {
           this.notifyError(e.message);
           this.$refs.recaptcha.reset();
-          this.loading = false
+          this.loading = false;
         }
       }
     },
@@ -268,48 +260,44 @@ export default {
       if (this.$refs.form.validate()) {
         this.loading = true
         try {
-          /*const response = await axios.post('http://localhost:15000/authentication/login', {
-            username: this.username,
-            password: this.password
-          })*/
           const response = await this.$store.dispatch('login', {
             username: this.username,
             password: this.password
           });
-          if(response.success){
+          if (response.success) {
             this.notifySuccess(response.message);
-            this.$router.push('Main');
-          }
-          else{
+            this.$router.push('/');
+          } else {
             this.notifyError(response.message);
           }
-          this.loading = false
+          this.loading = false;
         } catch (e) {
           this.notifyError(e.message);
-          this.loading = false
+          this.loading = false;
         }
       }
     },
     verifyCaptcha(token) {
-      this.captchaToken = token
+      this.captchaToken = token;
     },
     expiredCaptcha() {
-      this.captchaToken = false
+      this.captchaToken = false;
     },
-    notifySuccess(message){
+    notifySuccess(message) {
       this.isSuccessVisible = true;
       this.isErrorVisible = false;
       this.successText = message;
     },
-    notifyError(message){
+    notifyError(message) {
       this.isSuccessVisible = false;
       this.isErrorVisible = true;
       this.errorText = message;
     }
   },
+
   created() {
     if (this.loggedIn) {
-      this.$router.push('Main');
+      this.$router.push('/');
     }
   }
 }
