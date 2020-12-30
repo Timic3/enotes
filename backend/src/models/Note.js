@@ -18,6 +18,16 @@ export default class Note extends Sequelize.Model {
         allowNull: false,
         unique: false
       },
+      color: {
+        type: Sequelize.STRING(1000),
+        allowNull: false,
+        unique: false
+      },
+      imageURL: {
+        type: Sequelize.STRING(1000),
+        allowNull: false,
+        unique: false
+      },
     }, {
       hooks: {
       },

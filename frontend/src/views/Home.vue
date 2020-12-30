@@ -32,14 +32,14 @@
         </v-btn>-->
       </v-col>
       <div v-for="note in notes" :key="note.id" class="ma-lg-1 ma-md-1 ma-sm-3 ma-xs-5" >
-        <DraggableDiv v-if="note.sh">
+        <DraggableDiv v-if="note.sh" :color="note.color">
           <template slot="header">
             <v-img
-              src="https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg"
-              height="100px"
+              class="custom-transition"
+              :src="note.imageURL"
             ></v-img>
           </template>
-          <template slot="main" >
+          <template slot="main">
             <v-card-title>
               {{ note.title }}
             </v-card-title>
@@ -178,6 +178,17 @@
           v-model="todo"
           label="Items (ex. item1, item2)"
         ></v-text-field>
+        <v-color-picker
+          dot-size="30"
+          v-model="picker"
+          hide-canvas
+          mode="rgba"
+          swatches-max-height="250"
+        ></v-color-picker>
+        <v-text-field
+          v-model="image"
+          label="Image url"
+        ></v-text-field>
         <v-btn
           color="green lighten-1"
           text
@@ -214,6 +225,17 @@
 </template>
 
 <style lang="scss" scoped>
+
+.custom-transition{
+  height: 150px;
+  transition: 0.4s;
+}
+
+.custom-transition:hover {
+  height:250px;
+  transition: 0.4s;
+}
+
 .v-list-item {
   min-height: 0 !important;
 }
@@ -239,6 +261,7 @@ export default {
   data: () => ({
     notes: [],
     add: false,
+    expand: false,
     reminder: false,
     datepicker: false,
     timepicker: false,
@@ -251,6 +274,8 @@ export default {
     menu1: false,
     menu2: false,
     modal2: false,
+    picker: null,
+    image: '',
   }),
 
   components: {
@@ -278,11 +303,14 @@ export default {
       const data = response.data.array;
       data.forEach(async element => {
         if (element.type == "Normal") {
+          console.log(element.color);
           this.notes.push({
             id: element.id,
             title: element.title,
             type: element.type,
             text: element.text,
+            imageURL: element.imageURL,
+            color: element.color,
             show: false,
             sh: true
           });
@@ -302,6 +330,8 @@ export default {
             id: element.id,
             title: element.title,
             type: element.type,
+            imageURL: element.imageURL,
+            color: element.color,
             items: itms,
             show: false,
             sh: true
@@ -312,11 +342,14 @@ export default {
     async saveNote() {
       if (this.todo === "") this.type = "Normal";
       else this.type = "todo";
-
+      if(this.image === "") this.image = "https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg";
+      console.log(this.image);
       const response = await axios.post('http://localhost:15000/notes/create', {
         userid: this.user.id,
         title: this.title,
         type: this.type,
+        color: 'rgba('+this.picker.rgba.r+', '+this.picker.rgba.g+', '+this.picker.rgba.b+', '+this.picker.rgba.a+')',
+        imageURL: this.image,
         text: this.text,
         todo: this.todo.split(','),
       }, {
@@ -325,6 +358,7 @@ export default {
         }
       });
       this.notes = [];
+      this.image = "";
       this.loadNotes();
     },
     async removeNote(idnote) {

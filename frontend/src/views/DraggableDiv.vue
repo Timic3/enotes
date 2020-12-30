@@ -4,6 +4,7 @@
       elevation="1" 
       outlined
       max-width="438"
+      :style="'background: '+color"
     >
       <div id="draggable-header" @mousedown="dragMouseDown">
         <slot name="header"></slot>
@@ -27,6 +28,7 @@ export default {
       }
     }
   },
+  props: ['color'],
   methods: {
     dragMouseDown: function (event) {
       event.preventDefault()

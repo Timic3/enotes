@@ -17,7 +17,7 @@ router.post('/get', async (ctx) => {
         attributes: []
       }
     ],
-    attributes: ['id','title', 'text', 'type'],
+    attributes: ['id','title', 'text', 'type', 'color', 'imageURL'],
     raw: true
   });
 
@@ -54,6 +54,8 @@ router.post('/create', async (ctx) => {
     await db.Note.create({
       title: body.title,
       text: body.text,
+      color: body.color,
+      imageURL: body.imageURL,
       userId: jwt.id,
       type: "Normal"
     })
@@ -61,6 +63,8 @@ router.post('/create', async (ctx) => {
     const note = await db.Note.create({
       title: body.title,
       text: body.text,
+      color: body.color,
+      imageURL: body.imageURL,
       userId: jwt.id,
       type: "Todo"
     })
