@@ -17,7 +17,7 @@ router.post('/get', async (ctx) => {
         attributes: []
       }
     ],
-    attributes: ['id','title', 'text', 'type', 'color', 'imageURL'],
+    attributes: ['id','title', 'text', 'type', 'color', 'clientX', 'clientY', 'imageURL'],
     raw: true
   });
 
@@ -55,6 +55,8 @@ router.post('/create', async (ctx) => {
       title: body.title,
       text: body.text,
       color: body.color,
+      clientX: body.clientX,
+      clientY: body.clientY,
       imageURL: body.imageURL,
       userId: jwt.id,
       type: "Normal"
@@ -64,6 +66,8 @@ router.post('/create', async (ctx) => {
       title: body.title,
       text: body.text,
       color: body.color,
+      clientX: body.clientX,
+      clientY: body.clientY,
       imageURL: body.imageURL,
       userId: jwt.id,
       type: "Todo"
@@ -117,6 +121,24 @@ router.post('/updatetodo', async (ctx) => {
 
   ctx.body = {
     message: "updated"
+  };
+});
+
+router.post('/updateNotePos', async (ctx) =>{
+  const body = ctx.request.body;
+  const jwt = ctx.request.jwtPayload;
+
+  await db.Note.update({
+    clientX: body.clientX,
+    clientY: body.clientY
+  }, {
+    where: {
+      id: body.noteid
+    }
+  });
+
+  ctx.body = {
+    message: "updated note position"
   };
 });
 

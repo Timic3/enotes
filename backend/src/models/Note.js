@@ -23,6 +23,16 @@ export default class Note extends Sequelize.Model {
         allowNull: false,
         unique: false
       },
+      clientX: {
+        type: Sequelize.INTEGER(100),
+        allowNull: false,
+        unique: false
+      },
+      clientY: {
+        type: Sequelize.INTEGER(100),
+        allowNull: false,
+        unique: false
+      },
       imageURL: {
         type: Sequelize.STRING(1000),
         allowNull: false,

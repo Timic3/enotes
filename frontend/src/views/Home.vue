@@ -17,6 +17,13 @@
         >
           Add note
         </v-btn>
+        <v-btn
+          color="green lighten-1"
+          text
+          @click="addDrawing=true"
+        >
+          Add Drawing
+        </v-btn>
         <!--
         <v-btn
           color="green lighten-1"
@@ -37,7 +44,12 @@
             <v-img
               class="custom-transition"
               :src="note.imageURL"
-            ></v-img>
+              v-on:click="returnPositionOfCard"
+            >
+              <v-card-title class="d-none">
+                {{ note.id }}
+              </v-card-title>
+            </v-img>
           </template>
           <template slot="main">
             <v-card-title>
@@ -105,6 +117,19 @@
         </DraggableDiv>
       </div>
     </v-row>
+    <v-overlay v-if="addDrawing">
+      <v-card light elevation="1" >
+        <selection></selection>
+        <v-row></v-row>
+        <v-btn
+          color="green lighten-1"
+          text
+          @click="addDrawing = false"
+        >
+          SAVE
+        </v-btn>
+      </v-card>
+    </v-overlay>
     <v-overlay
       v-if="add"
     >
@@ -181,8 +206,7 @@
         <v-color-picker
           dot-size="30"
           v-model="picker"
-          hide-canvas
-          mode="rgba"
+          hide-mode-switch
           swatches-max-height="250"
         ></v-color-picker>
         <v-text-field
@@ -254,6 +278,7 @@
 <script>
 import axios from 'axios';
 import DraggableDiv from './DraggableDiv'
+import selection from './selection'
 
 export default {
   name: 'Home',
@@ -261,6 +286,7 @@ export default {
   data: () => ({
     notes: [],
     add: false,
+    addDrawing: false,
     expand: false,
     reminder: false,
     datepicker: false,
@@ -274,12 +300,13 @@ export default {
     menu1: false,
     menu2: false,
     modal2: false,
-    picker: null,
+    picker: { r: 255, g: 0, b: 255, a: 1 },
     image: '',
   }),
 
   components: {
-    DraggableDiv
+    DraggableDiv,
+    selection
   },
 
   computed: {
@@ -309,6 +336,8 @@ export default {
             title: element.title,
             type: element.type,
             text: element.text,
+            clientX: element.clientX,
+            clientY: element.clientY,
             imageURL: element.imageURL,
             color: element.color,
             show: false,
@@ -331,6 +360,8 @@ export default {
             title: element.title,
             type: element.type,
             imageURL: element.imageURL,
+            clientX: element.clientX,
+            clientY: element.clientY,
             color: element.color,
             items: itms,
             show: false,
@@ -343,12 +374,14 @@ export default {
       if (this.todo === "") this.type = "Normal";
       else this.type = "todo";
       if(this.image === "") this.image = "https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg";
-      console.log(this.image);
+      console.log(this.picker);
       const response = await axios.post('http://localhost:15000/notes/create', {
         userid: this.user.id,
         title: this.title,
         type: this.type,
-        color: 'rgba('+this.picker.rgba.r+', '+this.picker.rgba.g+', '+this.picker.rgba.b+', '+this.picker.rgba.a+')',
+        clientX: 0,
+        clientY: 0,
+        color: 'rgba('+this.picker.r+', '+this.picker.g+', '+this.picker.b+', '+this.picker.a+')',
         imageURL: this.image,
         text: this.text,
         todo: this.todo.split(','),
@@ -385,6 +418,19 @@ export default {
     logout() {
       this.$store.dispatch('logout');
       this.$router.push('/login');
+    },
+    async returnPositionOfCard (x){
+      //this should be on close or refresh and position of component is not set
+      console.log(x);
+      const response = await axios.post('http://localhost:15000/notes/updateNotePos', {
+        clientX: x.clientX,
+        clientY: x.clientY,
+        noteid: x.target.children[0].innerHTML,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
+      });
     }
   },
 
@@ -394,6 +440,10 @@ export default {
       return;
     }
     this.loadNotes();
+    window.addEventListener('beforeunload', () => {
+      //I CAN ACCESS TO this VARIABLE
+      console.log(this.returnPositionOfCard);
+    }, false)
   },
 }
 </script>
