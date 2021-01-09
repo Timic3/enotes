@@ -68,7 +68,7 @@
             </v-card-title>
 
             <v-card-subtitle>
-              Reminder:
+              Reminder: {{ modifyDate(note.reminderDate) }}
             </v-card-subtitle>
 
             <v-card-actions>
@@ -294,6 +294,7 @@ export default {
     reminder: false,
     datepicker: false,
     timepicker: false,
+    reminders: [],
     title: '',
     text: '',
     todo: '',
@@ -303,7 +304,7 @@ export default {
     menu1: false,
     menu2: false,
     modal2: false,
-    picker: { r: 255, g: 0, b: 255, a: 1 },
+    picker: { r: 255, g: 255, b: 255, a: 1 },
     image: '',
   }),
 
@@ -318,7 +319,7 @@ export default {
     },
     loggedIn() {
       return this.$store.state.status.loggedIn;
-    }
+    },
   },
 
   methods: {
@@ -342,6 +343,7 @@ export default {
             clientY: element.clientY,
             imageURL: element.imageURL,
             color: element.color,
+            reminderDate: element.reminderDate,
             show: false,
             sh: true
           });
@@ -366,6 +368,7 @@ export default {
             clientY: element.clientY,
             color: element.color,
             items: itms,
+            reminderDate: element.reminderDate,
             show: false,
             sh: true
           });
@@ -373,20 +376,21 @@ export default {
       });
     },
     async saveNote() {
+      console.log(this.date+" "+this.time);
       if (this.todo === "") this.type = "Normal";
       else this.type = "todo";
       if(this.image === "") this.image = "https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg";
-      console.log(this.picker);
       const response = await axios.post('http://localhost:15000/notes/create', {
         userid: this.user.id,
         title: this.title,
         type: this.type,
-        clientX: 0,
-        clientY: 0,
+        clientX: 100,
+        clientY: 120,
         color: 'rgba('+this.picker.r+', '+this.picker.g+', '+this.picker.b+', '+this.picker.a+')',
         imageURL: this.image,
         text: this.text,
         todo: this.todo.split(','),
+        reminderDate: (this.reminder ? (this.date+" "+this.time+" UTC") : null),
       }, {
         headers: {
           'Authorization': `Bearer ${this.user.token}`
@@ -467,9 +471,30 @@ export default {
           id: element.drawingId,
         });*/
       });
+    },
+    modifyDate(date){
+      if(date !== null){
+        let stringDate = date+"";
+        var tmp = stringDate.split('T');
+        var tmp2 = tmp[1].split('.')[0];
+        return tmp[0]+" "+tmp2.substring(0, tmp2.length - 3);
+      }
+    },
+    getNow() {
+      const today = new Date();
+      const date = today.getFullYear()+'-'+this.format(today.getMonth()+1)+'-'+this.format(today.getDate());
+      const time = today.getHours() + ":" + this.format(today.getMinutes()) ;
+      const dateTime = date +' '+ time;
+      this.notes.forEach(note => {
+        if(this.modifyDate(note.reminderDate) === dateTime){
+          console.log('reminder!');
+        }
+      });
+    },
+    format(input){
+      return (input < 10 ? '0' : '') + input;
     }
   },
-
   created() {
     if (!this.loggedIn) {
       this.$router.push('/login');
@@ -477,6 +502,7 @@ export default {
     }
     this.loadNotes();
     this.loadDrawings();
+    setInterval(this.getNow, 5000);
   },
 }
 </script>

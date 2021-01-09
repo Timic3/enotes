@@ -38,6 +38,11 @@ export default class Note extends Sequelize.Model {
         allowNull: false,
         unique: false
       },
+      reminderDate: {
+        type: Sequelize.DATE(50),
+        allowNull: true,
+        unique: false
+      },
     }, {
       hooks: {
       },
@@ -53,11 +58,6 @@ export default class Note extends Sequelize.Model {
     this.hasMany(models.Todo, {
       foreignKey: 'noteId',
       allowNull: false,
-      onDelete: 'CASCADE'
-    });
-    this.hasMany(models.Reminder, {
-      foreignKey: 'noteId',
-      allowNull: true,
       onDelete: 'CASCADE'
     });
     this.belongsToMany(models.Label, {

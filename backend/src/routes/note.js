@@ -17,7 +17,7 @@ router.post('/get', async (ctx) => {
         attributes: []
       }
     ],
-    attributes: ['id','title', 'text', 'type', 'color', 'clientX', 'clientY', 'imageURL'],
+    attributes: ['id','title', 'text', 'type', 'color', 'clientX', 'clientY', 'imageURL', 'reminderDate'],
     raw: true
   });
 
@@ -59,7 +59,8 @@ router.post('/create', async (ctx) => {
       clientY: body.clientY,
       imageURL: body.imageURL,
       userId: jwt.id,
-      type: "Normal"
+      type: "Normal",
+      reminderDate: body.reminderDate
     })
   } else {
     const note = await db.Note.create({
@@ -70,7 +71,8 @@ router.post('/create', async (ctx) => {
       clientY: body.clientY,
       imageURL: body.imageURL,
       userId: jwt.id,
-      type: "Todo"
+      type: "Todo",
+      reminderDate: body.reminderDate
     })
     // TODO: Use of transactions
     body.todo.forEach(async element => {
