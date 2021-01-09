@@ -278,8 +278,8 @@
 
 <script>
 import axios from 'axios';
-import DraggableDiv from './DraggableDiv'
-import selection from './Selection'
+import DraggableDiv from './DraggableDiv';
+import Selection from './Selection';
 
 export default {
   name: 'Home',
@@ -309,7 +309,7 @@ export default {
 
   components: {
     DraggableDiv,
-    selection
+    Selection
   },
 
   computed: {
