@@ -246,6 +246,28 @@
         </v-btn>
       </v-card>
     </v-overlay>
+    <v-overlay :value="reminderCalled">
+      <v-card class="ma-5 pa-6" light elevation="1" max-width="600px" max-height="600px">
+        <v-img
+          :src="this.reminderData.imageURL"
+        >
+        </v-img>
+        <v-card-title>
+          Reminder! - {{this.reminderData.date}}
+        </v-card-title>
+        <v-row class="ma-2 pl-2">
+          You are being reminded for your note: <b>{{" "+this.reminderData.title}}</b>.
+        </v-row>
+        <v-btn
+          color="red lighten-1"
+          text
+          @click="reminderCalled = false"
+          class="mt-2"
+        >
+          Close
+        </v-btn>
+      </v-card>
+    </v-overlay>
   </v-container>
 </template>
 
@@ -294,6 +316,8 @@ export default {
     reminder: false,
     datepicker: false,
     timepicker: false,
+    reminderCalled: false,
+    reminderData:{},
     reminders: [],
     title: '',
     text: '',
@@ -487,7 +511,9 @@ export default {
       const dateTime = date +' '+ time;
       this.notes.forEach(note => {
         if(this.modifyDate(note.reminderDate) === dateTime){
-          console.log('reminder!');
+          this.reminderCalled = true;
+          this.reminderData = {title: note.title, date: dateTime, imageURL: note.imageURL};
+          note.reminderDate = null;
         }
       });
     },
