@@ -129,7 +129,7 @@
       </div>
     </v-row>
     <v-overlay v-if="addDrawing">
-      <selection v-on:saveDrawingToDb="saveDrawing"></selection>
+      <selection v-on:saveDrawingToDb="saveDrawing" v-on:cancelDrawing="addDrawing=false"></selection>
     </v-overlay>
     <v-overlay
       v-if="add"

@@ -9,6 +9,13 @@
     >
       SAVE
     </v-btn>
+    <v-btn
+      color="red lighten-1"
+      text
+      @click="cancelDrawing"
+    >
+      CANCEL
+    </v-btn>
   </v-card>
 </template>
 
@@ -73,6 +80,9 @@ export default {
     callSaveDrawing(){
       let image = this.canvas.toDataURL("image/png")
       this.$emit('saveDrawingToDb', image);
+    },
+    cancelDrawing(){
+      this.$emit('cancelDrawing');
     }
   },
   mounted() {
