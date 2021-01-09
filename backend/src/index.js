@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 
 import authentication from './routes/authentication';
 import note from './routes/note';
+import drawing from './routes/drawing';
 import Router from '@koa/router';
 
 import db from './models';
@@ -47,5 +48,6 @@ app.use(async (ctx, next) => {
   await next();
 });
 app.use(note.routes(), note.allowedMethods());
+app.use(drawing.routes(), drawing.allowedMethods());
 
 app.listen(15000, console.log('Server started on port 15000.'));

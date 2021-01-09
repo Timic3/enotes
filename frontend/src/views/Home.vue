@@ -423,7 +423,6 @@ export default {
     },
     async returnPositionOfCard (x){
       //this should be on close or refresh and position of component is not set
-      console.log(x.target.parentElement.parentElement.parentElement.parentElement.offsetLeft+" "+x.target.parentElement.parentElement.parentElement.parentElement.offsetTop);
       const response = await axios.post('http://localhost:15000/notes/updateNotePos', {
         clientX: x.target.parentElement.parentElement.parentElement.parentElement.offsetLeft,
         clientY: x.target.parentElement.parentElement.parentElement.parentElement.offsetTop,
@@ -434,12 +433,40 @@ export default {
         }
       });
     },
-    saveDrawing(e){
+    async saveDrawing(e){
       this.addDrawing = false;
       this.drawings.push({id: this.drawingsId, url: e});
       this.drawingsId += 1;
-      console.log(this.drawings);
+      console.log(e.length);
       //SAVE TO DB
+      // value too long for type character varying(1000)
+      /*
+      await axios.post('http://localhost:15000/drawings/create', {
+        clientX: 0,
+        clientY: 0,
+        imageURL: e,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
+      });*/
+    },
+    async loadDrawings(){
+      const response = await axios.post('http://localhost:15000/drawings/get', {
+        userid: this.user.id,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
+      });
+      const data = response.data.array;
+      data.forEach(async element => {
+        console.log(element);
+        /*
+        this.drawings.push({
+          id: element.drawingId,
+        });*/
+      });
     }
   },
 
@@ -449,10 +476,7 @@ export default {
       return;
     }
     this.loadNotes();
-    window.addEventListener('beforeunload', () => {
-      //I CAN ACCESS TO this VARIABLE
-      console.log(this.returnPositionOfCard);
-    }, false)
+    this.loadDrawings();
   },
 }
 </script>

@@ -35,5 +35,10 @@ export default class User extends Sequelize.Model {
       allowNull: false,
       onDelete: 'CASCADE'
     });
+    this.hasMany(models.Drawing, {
+      foreignKey: 'userId',
+      allowNull: false,
+      onDelete: 'CASCADE'
+    });
   }
 }
