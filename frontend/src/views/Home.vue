@@ -38,8 +38,19 @@
           Clear
         </v-btn>-->
       </v-col>
+      <div v-for="drawing in drawings" :key="drawing.id" class="ma-lg-1 ma-md-1 ma-sm-3 ma-xs-5" >
+        <DraggableDiv>
+          <template slot="header">
+            <v-img
+              class="custom-transition"
+              :src="drawing.url"
+            >
+            </v-img>
+          </template>
+        </DraggableDiv>
+      </div>
       <div v-for="note in notes" :key="note.id" class="ma-lg-1 ma-md-1 ma-sm-3 ma-xs-5" >
-        <DraggableDiv v-if="note.sh" :color="note.color">
+        <DraggableDiv v-if="note.sh" :color="note.color" :savedClientX="note.clientX" :savedClientY="note.clientY">
           <template slot="header">
             <v-img
               class="custom-transition"
@@ -118,17 +129,7 @@
       </div>
     </v-row>
     <v-overlay v-if="addDrawing">
-      <v-card light elevation="1" >
-        <selection></selection>
-        <v-row></v-row>
-        <v-btn
-          color="green lighten-1"
-          text
-          @click="addDrawing = false"
-        >
-          SAVE
-        </v-btn>
-      </v-card>
+      <selection v-on:saveDrawingToDb="saveDrawing"></selection>
     </v-overlay>
     <v-overlay
       v-if="add"
@@ -278,13 +279,15 @@
 <script>
 import axios from 'axios';
 import DraggableDiv from './DraggableDiv'
-import selection from './selection'
+import selection from './Selection'
 
 export default {
   name: 'Home',
 
   data: () => ({
     notes: [],
+    drawings: [],
+    drawingsId: 1,
     add: false,
     addDrawing: false,
     expand: false,
@@ -330,7 +333,6 @@ export default {
       const data = response.data.array;
       data.forEach(async element => {
         if (element.type == "Normal") {
-          console.log(element.color);
           this.notes.push({
             id: element.id,
             title: element.title,
@@ -421,16 +423,23 @@ export default {
     },
     async returnPositionOfCard (x){
       //this should be on close or refresh and position of component is not set
-      console.log(x);
+      console.log(x.target.parentElement.parentElement.parentElement.parentElement.offsetLeft+" "+x.target.parentElement.parentElement.parentElement.parentElement.offsetTop);
       const response = await axios.post('http://localhost:15000/notes/updateNotePos', {
-        clientX: x.clientX,
-        clientY: x.clientY,
+        clientX: x.target.parentElement.parentElement.parentElement.parentElement.offsetLeft,
+        clientY: x.target.parentElement.parentElement.parentElement.parentElement.offsetTop,
         noteid: x.target.children[0].innerHTML,
       }, {
         headers: {
           'Authorization': `Bearer ${this.user.token}`
         }
       });
+    },
+    saveDrawing(e){
+      this.addDrawing = false;
+      this.drawings.push({id: this.drawingsId, url: e});
+      this.drawingsId += 1;
+      console.log(this.drawings);
+      //SAVE TO DB
     }
   },
 

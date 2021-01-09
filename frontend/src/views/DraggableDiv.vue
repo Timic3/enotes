@@ -29,7 +29,7 @@ export default {
       gridSize: 50,
     }
   },
-  props: ['color'],
+  props: ['color', 'savedClientX', 'savedClientY'],
   methods: {
     dragMouseDown: function (event) {
       event.preventDefault()
@@ -45,8 +45,8 @@ export default {
       this.positions.movementY = this.positions.clientY - event.clientY
       this.positions.clientX = event.clientX
       this.positions.clientY = event.clientY
+      console.log(this.$refs.draggableContainer.offsetTop+" "+this.$refs.draggableContainer.offsetLeft);
       // set the element's new position:
-      console.log(this.$refs.draggableContainer.style.top+" "+this.$refs.draggableContainer.style.left);
       this.$refs.draggableContainer.style.top = (this.$refs.draggableContainer.offsetTop - this.positions.movementY) + 'px'
       this.$refs.draggableContainer.style.left = (this.$refs.draggableContainer.offsetLeft - this.positions.movementX) + 'px'
     },
@@ -55,6 +55,12 @@ export default {
       document.onmousemove = null
     },
   },
+  mounted() {
+    if(typeof this.savedClientX !== 'undefined' && typeof this.savedClientY !== 'undefined'){
+      this.$refs.draggableContainer.style.left = this.savedClientX + 'px';
+      this.$refs.draggableContainer.style.top = this.savedClientY + 'px';
+    }
+  }
 }
 </script>
 

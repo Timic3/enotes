@@ -1,6 +1,15 @@
 <template>
-  <!--<canvas id='canvas' ref='select' @mousedown='startSelect' @mousemove='drawRect' @mouseup='stopSelect'></canvas>-->
-  <canvas id='canvas' ref='select' @mousedown='startPainting' @mousemove='sketch' @mouseup='stopPainting'></canvas>
+  <v-card light elevation="1" >
+    <canvas id='canvas' ref='select' @mousedown='startPainting' @mousemove='sketch' @mouseup='stopPainting'></canvas>
+    <v-row></v-row>
+    <v-btn
+      color="green lighten-1"
+      text
+      @click="callSaveDrawing"
+    >
+      SAVE
+    </v-btn>
+  </v-card>
 </template>
 
 <script>
@@ -12,6 +21,7 @@ export default {
       canvas: null,
       selectionMode: false,
       paint: false,
+      test: false,
       coord: {x: 0, y: 0},
       startPosition: {
         x: null,
@@ -19,9 +29,7 @@ export default {
       }
     };
   },
-  
   methods: {
-
     getPosition(event){ 
       this.coord.x = event.clientX - this.canvas.parentElement.parentElement.offsetLeft; 
       this.coord.y = event.clientY - this.canvas.parentElement.parentElement.offsetTop; 
@@ -60,7 +68,11 @@ export default {
       this.ctx.lineTo(this.coord.x , this.coord.y); 
         
       // Draws the line. 
-      this.ctx.stroke(); 
+      this.ctx.stroke();
+    },
+    callSaveDrawing(){
+      let image = this.canvas.toDataURL("image/png")
+      this.$emit('saveDrawingToDb', image);
     }
   },
   mounted() {
