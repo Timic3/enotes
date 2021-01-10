@@ -1,10 +1,12 @@
 module.exports = {
   production: {
-    dialect: 'sqlite',
-    storage: ':memory:',
-    dialectOptions: {
-      timezone: 'Etc/GMT0',
-    },
+    host: 'localhost',
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+    port: 5432,
+    dialect: 'postgres',
+    timezone: 'Europe/Ljubljana',
     pool: {
       max: 5,
       min: 0,
@@ -19,9 +21,7 @@ module.exports = {
     database: 'postgres',
     port: 25432,
     dialect: 'postgres',
-    dialectOptions: {
-      timezone: 'Etc/GMT0',
-    },
+    timezone: 'Europe/Ljubljana',
     pool: {
       max: 5,
       min: 0,
