@@ -34,6 +34,6 @@ jobs:
     - name: Deploy to server
       run: pm2 deploy ecosystem.config.js production
       env:
-        TARGET_USER: ${{ secrets.SSH_USER }}
-        TARGET_HOST: ${{ secrets.SSH_HOST }}
-        TARGET_PATH: ${{ secrets.SSH_PATH }}
+        SSH_USER: ${{ secrets.SSH_USER }}
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        SSH_PATH: ${{ secrets.SSH_PATH }}
