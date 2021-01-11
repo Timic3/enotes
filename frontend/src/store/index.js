@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+import { API } from './constants';
+
 Vue.use(Vuex)
 
 const user = JSON.parse(localStorage.getItem('user'));
@@ -21,7 +23,7 @@ export default new Vuex.Store({
   },
   actions: {
     async login({ commit }, user) {
-      const response = await axios.post('http://localhost:15000/authentication/login', {
+      const response = await axios.post(`${API}/authentication/login`, {
         username: user.username,
         password: user.password,
       });
@@ -32,7 +34,7 @@ export default new Vuex.Store({
       return response.data;
     },
     async register({ commit }, user) {
-      const response = await axios.post('http://localhost:15000/authentication/register', {
+      const response = await axios.post(`${API}/authentication/register`, {
         username: user.username,
         email: user.email,
         password: user.password,
