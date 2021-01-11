@@ -5,10 +5,6 @@ import bodyParser from 'koa-body';
 import jwt from 'jsonwebtoken';
 import Router from '@koa/router';
 
-if (process.env.NODE_ENV === 'production') {
-  require('dotenv').config({ path: '/home/enotes-deploy/.env' });
-}
-
 import authentication from './routes/authentication';
 import note from './routes/note';
 import drawing from './routes/drawing';
