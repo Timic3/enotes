@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
     name: 'ENotes',
-    script: 'src/index.js',
+    script: 'backend/src/index.js',
     instances: 1,
     autorestart: true,
     watch: false,
@@ -22,6 +22,6 @@ module.exports = {
       repo: 'git@github.com:Timic3/enotes.git',
       path: process.env.SSH_PATH,
       'post-deploy': 'npm install && pm2 reload ecosystem.config.cjs --env production'
-    }
+    },
   }
 };
