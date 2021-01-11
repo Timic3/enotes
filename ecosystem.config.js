@@ -2,7 +2,8 @@ module.exports = {
   apps: [{
     name: 'ENotes',
     interpreter: 'babel-node',
-    script: 'backend/src/index.js',
+    script: 'src/index.js',
+    cwd: process.env.SSH_PATH + '/enotes/source/backend',
     instances: 1,
     autorestart: true,
     watch: false,
