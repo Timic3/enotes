@@ -4,6 +4,7 @@ module.exports = {
     interpreter: 'babel-node',
     script: 'src/index.js',
     exec_mode: 'fork',
+    cwd: process.env.SSH_PATH + '/enotes/source/backend/',
     instances: 1,
     autorestart: true,
     watch: false,

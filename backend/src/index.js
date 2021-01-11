@@ -15,7 +15,7 @@ console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'production') {
   require('dotenv').config({ path: '/home/enotes-deploy/.env' });
   console.log(process.env.NODE_ENV);
-  console.log(process.env.PASSWORD);
+  console.log(process.env.D_PASSWORD);
 }
 
 db.sequelize.authenticate()
