@@ -3,11 +3,11 @@ import helmet from 'koa-helmet';
 import cors from '@koa/cors';
 import bodyParser from 'koa-body';
 import jwt from 'jsonwebtoken';
+import Router from '@koa/router';
 
 import authentication from './routes/authentication';
 import note from './routes/note';
 import drawing from './routes/drawing';
-import Router from '@koa/router';
 
 import db from './models';
 
