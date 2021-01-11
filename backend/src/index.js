@@ -11,6 +11,10 @@ import Router from '@koa/router';
 
 import db from './models';
 
+if (process.env.NODE_ENV === 'production') {
+  require('dotenv').config({ path: '/home/enotes-deploy/.env' });
+}
+
 db.sequelize.authenticate()
   .then(() => console.log('Connected to the database.'))
   .catch(console.error);
