@@ -2,9 +2,6 @@ if (process.env.NODE_ENV === 'production') {
   require('dotenv').config({ path: '/home/enotes-deploy/.env' });
 }
 
-console.log(process.env.NODE_ENV);
-console.log(process.env.D_USERNAME);
-
 module.exports = {
   production: {
     host: 'localhost',

@@ -21,7 +21,7 @@ module.exports = {
       key: 'enotes-key',
       user: process.env.SSH_USER,
       host: process.env.SSH_HOST,
-      ref: 'origin/feature/ci',
+      ref: 'origin/master',
       repo: 'git@github.com:Timic3/enotes.git',
       path: process.env.SSH_PATH,
       'post-deploy': 'cd ./backend && npm install && pm2 reload ecosystem.config.js --env production'
