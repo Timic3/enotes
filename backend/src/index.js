@@ -9,14 +9,11 @@ import note from './routes/note';
 import drawing from './routes/drawing';
 import Router from '@koa/router';
 
-import db from './models';
-
-console.log(process.env.NODE_ENV);
 if (process.env.NODE_ENV === 'production') {
   require('dotenv').config({ path: '/home/enotes-deploy/.env' });
-  console.log(process.env.NODE_ENV);
-  console.log(process.env.D_PASSWORD);
 }
+
+import db from './models';
 
 db.sequelize.authenticate()
   .then(() => console.log('Connected to the database.'))
