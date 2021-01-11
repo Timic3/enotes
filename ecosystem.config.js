@@ -1,6 +1,7 @@
 module.exports = {
   apps: [{
     name: 'ENotes',
+    interpreter: 'babel-node',
     script: 'backend/src/index.js',
     instances: 1,
     autorestart: true,
