@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js 15.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '15.x'
+
+    - name: Install PM2 package
+      run: npm install -g pm2@4.5.1
+
+    - name: Add server to known_hosts
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_TRUST }}" >> ~/.ssh/known_hosts
+        chmod 700 ~/.ssh && chmod 600 ~/.ssh/known_hosts
+    - name: Export key to a file
+      run: |
+        echo "${{ secrets.SSH_KEY }}" >> ./enotes-key
+        chmod 600 ./enotes-key
+    - name: Deploy to server
+      run: pm2 deploy ecosystem.config.js production
+      env:
+        TARGET_USER: ${{ secrets.SSH_USER }}
+        TARGET_HOST: ${{ secrets.SSH_HOST }}
+        TARGET_PATH: ${{ secrets.SSH_PATH }}
