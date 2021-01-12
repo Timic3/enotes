@@ -8,6 +8,24 @@ import db from '../models';
 
 const router = new Router({ prefix: '/authentication' });
 
+/**
+ * @api {POST} /authentication/login Login
+ * @apiSampleRequest https://api-enotes.westeurope.cloudapp.azure.com/
+ * @apiName Login
+ * @apiGroup Authentication
+ * 
+ * @apiParam   (Body)    {String}  username      Username
+ * @apiParam   (Body)    {String}  password      Password
+ * 
+ * @apiSuccess {Boolean} success       Status of request
+ * @apiSuccess {Object}  user          User information
+ * @apiSuccess {Number}  user.id       User ID
+ * @apiSuccess {String}  user.username Username
+ * @apiSuccess {String}  user.token    JWT Token
+ * 
+ * @apiError   {Boolean} success       Status of request
+ * @apiError   {String}  message       Message of request
+ */
 router.post('/login', async (ctx) => {
   const body = ctx.request.body;
   if (!body.username || !body.password) {
@@ -67,6 +85,24 @@ router.post('/login', async (ctx) => {
   }
 });
 
+/**
+ * @api {POST} /authentication/register Register
+ * @apiSampleRequest https://api-enotes.westeurope.cloudapp.azure.com/
+ * @apiName Register
+ * @apiGroup Authentication
+ * 
+ * @apiParam   (Body)    {String}  username  Username
+ * @apiParam   (Body)    {String}  password  Password
+ * @apiParam   (Body)    {String}  email     Email
+ * @apiParam   (Body)    {Boolean} mobile    Is mobile version?
+ * @apiParam   (Body)    {String}  captcha   ReCAPTCHA token
+ * 
+ * @apiSuccess {Boolean} success  Status of request
+ * @apiSuccess {String}  message  Message of request
+ * 
+ * @apiError   {Boolean} success  Status of request
+ * @apiError   {String}  message  Message of request
+ */
 router.post('/register', async (ctx) => {
   const body = ctx.request.body;
   if (!body.username || !body.password || !body.email) {
