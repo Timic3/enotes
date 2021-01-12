@@ -135,7 +135,10 @@ router.post('/create', async (ctx) => {
       reminderDate: body.reminderDate
     })
     // TODO: Use of transactions
-    body.todo.forEach(async element => {
+
+    let todos = body.todo.split(',');
+
+    todos.forEach(async element => {
       const td = await db.Todo.create({
         title: element,
         text: null,
