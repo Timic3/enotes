@@ -79,6 +79,13 @@
               >
                 Remove
               </v-btn>
+              <v-btn
+                color="green lighten-1"
+                text
+                @click="openEditPanel(note.id, note.title, note.text, note.reminderDate, note.items, note.imageURL, note.color)"
+              >
+                Edit
+              </v-btn>
 
               <v-spacer></v-spacer>
 
@@ -132,9 +139,11 @@
       <selection v-on:saveDrawingToDb="saveDrawing" v-on:cancelDrawing="addDrawing=false"></selection>
     </v-overlay>
     <v-overlay
-      v-if="add"
+      v-if="add || editing"
     >
       <v-card class="mx-auto mt-6 pa-6" max-width="800" light elevation="1" >
+        <v-card-title class="d-none" model="editingNoteId">
+        </v-card-title>
         <v-text-field
           v-model="title"
           label="Title"
@@ -217,9 +226,18 @@
         <v-btn
           color="green lighten-1"
           text
+          v-if="!editing"
           @click="saveNote"
         >
           Add
+        </v-btn>
+        <v-btn
+          color="green lighten-1"
+          text
+          v-if="editing"
+          @click="editNote"
+        >
+          Edit
         </v-btn>
         <v-btn
           color="green lighten-1"
@@ -240,7 +258,7 @@
         <v-btn
           color="red lighten-1"
           text
-          @click="add=false"
+          @click="add=false;editing=false;"
         >
           Close
         </v-btn>
@@ -330,6 +348,8 @@ export default {
     modal2: false,
     picker: { r: 255, g: 255, b: 255, a: 1 },
     image: '',
+    editing: false,
+    editingNoteId: null,
   }),
 
   components: {
@@ -435,6 +455,15 @@ export default {
       this.notes = [];
       this.loadNotes();
     },
+    async removeNoteWithoutLoading(idnote) {
+      const response = await axios.post('http://localhost:15000/notes/removenote', {
+        noteid: idnote
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
+      });
+    },
     async itemCheck(item) {
       const response = await axios.post('http://localhost:15000/notes/updatetodo', {
         checked: item.checked,
@@ -519,6 +548,35 @@ export default {
     },
     format(input){
       return (input < 10 ? '0' : '') + input;
+    },
+    openEditPanel(id, title, text, reminder, items, image, color){
+      this.title = title;
+      this.text = text;
+      let itemsToString = "";
+      if(typeof items !== "undefined"){
+        items.forEach(item => {
+          itemsToString = itemsToString + item.title+","
+        });
+      }
+      this.todo = itemsToString.substring(0,itemsToString.length-1);
+      let colors = color.substring(5, color.length-1).split(',');
+      this.picker = {r: colors[0], g: colors[1], b: colors[2], a: colors[3]};
+      this.image = image;
+
+      if(reminder != null){
+        this.reminder = true;
+        let tmp = this.modifyDate(reminder).split(" ");
+        this.date = tmp[0];
+        this.time = tmp[1];
+      }
+      this.editingNoteId = id;
+      this.editing = true;
+    },
+    async editNote(){
+      this.saveNote();
+      this.removeNoteWithoutLoading(this.editingNoteId);
+      this.editingNoteId = null;
+      this.editing = false;
     }
   },
   created() {
