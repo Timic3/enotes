@@ -321,6 +321,8 @@ import axios from 'axios';
 import DraggableDiv from './DraggableDiv';
 import Selection from './Selection';
 
+import { API } from '../store/constants';
+
 export default {
   name: 'Home',
 
@@ -368,7 +370,7 @@ export default {
 
   methods: {
     async loadNotes() {
-      const response = await axios.post('http://localhost:15000/notes/get', {
+      const response = await axios.post(`${API}/notes/get`, {
         userid: this.user.id,
       }, {
         headers: {
@@ -392,7 +394,7 @@ export default {
             sh: true
           });
         } else {
-          const responsetodo = await axios.post('http://localhost:15000/notes/gettodo', {
+          const responsetodo = await axios.post(`${API}/notes/gettodo`, {
             noteid: element.id,
           }, {
             headers: {
@@ -424,7 +426,7 @@ export default {
       if (this.todo === "") this.type = "Normal";
       else this.type = "todo";
       if(this.image === "") this.image = "https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg";
-      const response = await axios.post('http://localhost:15000/notes/create', {
+      const response = await axios.post(`${API}/notes/create`, {
         userid: this.user.id,
         title: this.title,
         type: this.type,
@@ -445,7 +447,7 @@ export default {
       this.loadNotes();
     },
     async removeNote(idnote) {
-      const response = await axios.post('http://localhost:15000/notes/removenote', {
+      const response = await axios.post(`${API}/notes/removenote`, {
         noteid: idnote
       }, {
         headers: {
@@ -465,7 +467,7 @@ export default {
       });
     },
     async itemCheck(item) {
-      const response = await axios.post('http://localhost:15000/notes/updatetodo', {
+      const response = await axios.post(`${API}/notes/updatetodo`, {
         checked: item.checked,
         todoid: item.id,
       }, {
@@ -480,7 +482,7 @@ export default {
     },
     async returnPositionOfCard (x){
       //this should be on close or refresh and position of component is not set
-      const response = await axios.post('http://localhost:15000/notes/updateNotePos', {
+      const response = await axios.post(`${API}/notes/updateNotePos`, {
         clientX: x.target.parentElement.parentElement.parentElement.parentElement.offsetLeft,
         clientY: x.target.parentElement.parentElement.parentElement.parentElement.offsetTop,
         noteid: x.target.children[0].innerHTML,
@@ -498,7 +500,7 @@ export default {
       //SAVE TO DB
       // value too long for type character varying(1000)
       /*
-      await axios.post('http://localhost:15000/drawings/create', {
+      await axios.post(`${API}/drawings/create`, {
         clientX: 0,
         clientY: 0,
         imageURL: e,
@@ -509,7 +511,7 @@ export default {
       });*/
     },
     async loadDrawings(){
-      const response = await axios.post('http://localhost:15000/drawings/get', {
+      const response = await axios.post(`${API}/drawings/get`, {
         userid: this.user.id,
       }, {
         headers: {

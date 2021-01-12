@@ -117,7 +117,7 @@ router.post('/register', async (ctx) => {
     remoteip: ctx.ip
   }, {
     params: {
-      secret: '6LeecOcZAAAAAPH1iHj3m7BoCk1hDxGwvnPHq_yL',
+      secret: body.mobile ? '6LcNvSkaAAAAAMBkEWKP2wy6MEo9A0Mv993eK4DG' : '6LeecOcZAAAAAPH1iHj3m7BoCk1hDxGwvnPHq_yL',
       response: body.captcha
     }
   })

@@ -1,10 +1,16 @@
+if (process.env.NODE_ENV === 'production') {
+  require('dotenv').config({ path: '/home/enotes-deploy/.env' });
+}
+
 module.exports = {
   production: {
-    dialect: 'sqlite',
-    storage: ':memory:',
-    dialectOptions: {
-      timezone: 'Etc/GMT0',
-    },
+    host: 'localhost',
+    username: process.env.D_USERNAME,
+    password: process.env.D_PASSWORD,
+    database: process.env.D_DATABASE,
+    port: 5432,
+    dialect: 'postgres',
+    timezone: 'Europe/Ljubljana',
     pool: {
       max: 5,
       min: 0,
@@ -19,9 +25,7 @@ module.exports = {
     database: 'postgres',
     port: 25432,
     dialect: 'postgres',
-    dialectOptions: {
-      timezone: 'Etc/GMT0',
-    },
+    timezone: 'Europe/Ljubljana',
     pool: {
       max: 5,
       min: 0,
