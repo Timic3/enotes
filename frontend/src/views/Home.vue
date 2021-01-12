@@ -46,6 +46,13 @@
               :src="drawing.url"
             >
             </v-img>
+            <v-btn
+              color="red lighten-1"
+              text
+              @click="removeDrawing(drawing.id)"
+            >
+              Remove
+            </v-btn>
           </template>
         </DraggableDiv>
       </div>
@@ -107,13 +114,16 @@
                 </div>
                 <div  v-if="note.type=='Todo'">
                   <v-divider></v-divider>
+                  <v-card-text>
+                    {{ note.text }}
+                  </v-card-text>
                   <v-list flat subheader three-line>
                     <v-list-item-group
                       multiple
                       active-class=""
                       v-for="item in note.items" :key="item[0]"
                     >
-                      <v-list-item>
+                      <v-list-item v-model="item.checked">
                         <template v-slot:default="{ active }">
                           <v-list-item-action>
                             <v-checkbox :input-value="active" v-model="item.checked" @click="itemCheck(item)"></v-checkbox>
@@ -409,6 +419,7 @@ export default {
             id: element.id,
             title: element.title,
             type: element.type,
+            text: element.text,
             imageURL: element.imageURL,
             clientX: element.clientX,
             clientY: element.clientY,
@@ -422,7 +433,6 @@ export default {
       });
     },
     async saveNote() {
-      console.log(this.date+" "+this.time);
       if (this.todo === "") this.type = "Normal";
       else this.type = "todo";
       if(this.image === "") this.image = "https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg";
@@ -510,6 +520,9 @@ export default {
         }
       });*/
     },
+    removeDrawing(id){
+      //removedrawing
+    },
     async loadDrawings(){
       const response = await axios.post(`${API}/drawings/get`, {
         userid: this.user.id,
@@ -520,7 +533,6 @@ export default {
       });
       const data = response.data.array;
       data.forEach(async element => {
-        console.log(element);
         /*
         this.drawings.push({
           id: element.drawingId,
