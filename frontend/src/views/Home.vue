@@ -468,7 +468,7 @@ export default {
       this.loadNotes();
     },
     async removeNoteWithoutLoading(idnote) {
-      const response = await axios.post('http://localhost:15000/notes/removenote', {
+      const response = await axios.post(`${API}/notes/removenote`, {
         noteid: idnote
       }, {
         headers: {
@@ -509,16 +509,15 @@ export default {
       console.log(e.length);
       //SAVE TO DB
       // value too long for type character varying(1000)
-      /*
       await axios.post(`${API}/drawings/create`, {
         clientX: 0,
         clientY: 0,
-        imageURL: e,
+        image: e,
       }, {
         headers: {
           'Authorization': `Bearer ${this.user.token}`
         }
-      });*/
+      });
     },
     removeDrawing(id){
       //removedrawing
