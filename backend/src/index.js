@@ -24,6 +24,14 @@ db.sequelize.sync(/*{ force: true }*/)
 const app = new Koa();
 const router = new Router();
 
+/**
+ * @api {GET} /health Health
+ * @apiSampleRequest https://api-enotes.westeurope.cloudapp.azure.com/
+ * @apiName Health
+ * @apiGroup Service
+ * 
+ * @apiSuccess {Boolean} success Status of request
+ */
 router.get('/health', async (ctx) => {
   ctx.body = {
     success: true
