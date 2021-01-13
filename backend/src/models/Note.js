@@ -38,6 +38,11 @@ export default class Note extends Sequelize.Model {
         allowNull: false,
         unique: false
       },
+      image: {
+        type: Sequelize.BLOB('long'),
+        allowNull: true,
+        unique: false
+      },
       reminderDate: {
         type: Sequelize.DATE(50),
         allowNull: true,

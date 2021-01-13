@@ -13,8 +13,8 @@ export default class Drawing extends Sequelize.Model {
         allowNull: false,
         unique: false
       },
-      imageURL: {
-        type: Sequelize.STRING(2500),
+      image: {
+        type: Sequelize.BLOB('long'),
         allowNull: false,
         unique: false
       },

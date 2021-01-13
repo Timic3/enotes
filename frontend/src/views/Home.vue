@@ -44,8 +44,8 @@
             <v-img
               class="custom-transition"
               :src="drawing.url"
-            >
-            </v-img>
+              width="100%"
+            />
             <v-btn
               color="red lighten-1"
               text
@@ -504,12 +504,13 @@ export default {
     },
     async saveDrawing(e){
       this.addDrawing = false;
-      this.drawings.push({id: this.drawingsId, url: e});
-      this.drawingsId += 1;
+      //this.drawings.push({id: this.drawingsId, url: e});
+      //this.drawingsId += 1;
       console.log(e.length);
       //SAVE TO DB
       // value too long for type character varying(1000)
-      await axios.post(`${API}/drawings/create`, {
+      console.log(e);
+      const response = await axios.post(`${API}/drawings/create`, {
         clientX: 0,
         clientY: 0,
         image: e,
@@ -519,8 +520,19 @@ export default {
         }
       });
     },
-    removeDrawing(id){
+    async removeDrawing(id){
       //removedrawing
+      console.log(id);
+      const response = await axios.post(`${API}/drawings/remove`, {
+        drawingid: id
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
+      });
+      // this.drawings = this.drawings.filter((drawing) => drawing.id == id);
+      this.drawings = [];
+      this.loadDrawings();
     },
     async loadDrawings(){
       const response = await axios.post(`${API}/drawings/get`, {
@@ -532,10 +544,10 @@ export default {
       });
       const data = response.data.array;
       data.forEach(async element => {
-        /*
         this.drawings.push({
-          id: element.drawingId,
-        });*/
+          id: element.id,
+          url: 'data:image/png;base64,' + Buffer.from(element.image.data).toString('base64')
+        });
       });
     },
     modifyDate(date){

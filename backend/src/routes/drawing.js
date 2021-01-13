@@ -33,7 +33,7 @@ router.post('/get', async (ctx) => {
         attributes: []
       }
     ],
-    attributes: ['id', 'clientX', 'clientY', 'imageURL'],
+    attributes: ['id', 'clientX', 'clientY', 'image'],
     raw: true
   });
 
@@ -52,7 +52,7 @@ router.post('/get', async (ctx) => {
  * 
  * @apiParam   (Body) {Number} clientX  Position X
  * @apiParam   (Body) {Number} clientY  Position Y
- * @apiParam   (Body) {String} imageURL Image URL
+ * @apiParam   (Body) {String} image    Image BLOB
  * 
  * @apiSuccess {Boolean} success  Status of request
  * 
@@ -61,15 +61,48 @@ router.post('/get', async (ctx) => {
 router.post('/create', async (ctx) => {
   const body = ctx.request.body;
   const jwt = ctx.request.jwtPayload;
+  console.log(body.image);
   await db.Drawing.create({
     clientX: body.clientX,
     clientY: body.clientY,
-    imageURL: body.imageURL,
+    image: Buffer.from(body.image.replace('data:image/png;base64,', ''), 'base64'),
     userId: jwt.id,
   });
   ctx.body = {
     success: true
   }
+});
+
+/**
+ * @api {POST} /drawings/remove Remove drawing
+ * @apiSampleRequest https://api-enotes.westeurope.cloudapp.azure.com/
+ * @apiName Remove drawing
+ * @apiGroup Drawings
+ * 
+ * @apiHeader  {String} Authorization  JWT token passed with 'Bearer'
+ * 
+ * @apiParam   (Body) {Number} drawingid Drawing ID
+ * 
+ * @apiSuccess {Boolean} success  Status of request
+ * 
+ * @apiError (Error 403) Unauthorized If invalid token was specified
+ */
+router.post('/remove', async (ctx) => {
+  const body = ctx.request.body;
+  const jwt = ctx.request.jwtPayload;
+
+  await db.Drawing.destroy({
+    where: {
+      id: body.drawingid,
+      userId: jwt.id
+    }
+  }).catch((err) => {
+    console.log(err)
+  });
+
+  ctx.body = {
+    success: true
+  };
 });
 
 export default router;
