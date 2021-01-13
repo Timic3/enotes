@@ -44,7 +44,6 @@
             <v-img
               class="custom-transition"
               :src="drawing.url"
-              width="100%"
             />
             <v-btn
               color="red lighten-1"
@@ -509,7 +508,6 @@ export default {
       console.log(e.length);
       //SAVE TO DB
       // value too long for type character varying(1000)
-      console.log(e);
       const response = await axios.post(`${API}/drawings/create`, {
         clientX: 0,
         clientY: 0,
@@ -519,6 +517,8 @@ export default {
           'Authorization': `Bearer ${this.user.token}`
         }
       });
+      this.drawings = [];
+      this.loadDrawings();
     },
     async removeDrawing(id){
       //removedrawing
@@ -546,6 +546,8 @@ export default {
       data.forEach(async element => {
         this.drawings.push({
           id: element.id,
+          clientX: element.clientX,
+          clientY: element.clientY,
           url: 'data:image/png;base64,' + Buffer.from(element.image.data).toString('base64')
         });
       });
