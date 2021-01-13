@@ -149,6 +149,7 @@ router.post('/create', async (ctx) => {
   }
 
   ctx.body = {
+    noteId: note.id,
     success: true
   };
 });
