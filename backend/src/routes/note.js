@@ -111,6 +111,7 @@ router.post('/create', async (ctx) => {
   const body = ctx.request.body;
   const jwt = ctx.request.jwtPayload;
   let note = null;
+  let image = body.image ? atob(body.image) : null;
   if (body.type == "Normal") {
     note = await db.Note.create({
       title: body.title,
@@ -119,6 +120,7 @@ router.post('/create', async (ctx) => {
       clientX: body.clientX,
       clientY: body.clientY,
       imageURL: body.imageURL,
+      image: image,
       userId: jwt.id,
       type: "Normal",
       reminderDate: body.reminderDate == "null" ? null : body.reminderDate
@@ -131,6 +133,7 @@ router.post('/create', async (ctx) => {
       clientX: body.clientX,
       clientY: body.clientY,
       imageURL: body.imageURL,
+      image: image,
       userId: jwt.id,
       type: "Todo",
       reminderDate: body.reminderDate == "null" ? null : body.reminderDate

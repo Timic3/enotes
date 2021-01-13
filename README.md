@@ -6,3 +6,8 @@ In everyday life we find ourselves in distress where we don't have access to a p
 ## Authors
 - Timotej Manfreda (63180193)
 - Jani Kačič (63180140)
+
+## Pictures
+
+## System
+Android and web applications communicate through API (/backend), which is hosted on Azure, while web application is hosted on Vercel. User has to register and login before they can use applications. After that, backend sends back JWT token, which user can use to represent their integrity within the system.
