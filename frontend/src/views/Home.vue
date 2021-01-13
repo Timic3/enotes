@@ -39,12 +39,17 @@
         </v-btn>-->
       </v-col>
       <div v-for="drawing in drawings" :key="drawing.id" class="ma-lg-1 ma-md-1 ma-sm-3 ma-xs-5" >
-        <DraggableDiv>
+        <DraggableDiv :savedClientX="drawing.clientX" :savedClientY="drawing.clientY">
           <template slot="header">
             <v-img
               class="custom-transition"
               :src="drawing.url"
-            />
+              v-on:click="returnPositionOfDrawing"
+            >
+              <v-card-title class="d-none">
+                {{ drawing.id }}
+              </v-card-title>
+            </v-img>
             <v-btn
               color="red lighten-1"
               text
@@ -501,6 +506,18 @@ export default {
         }
       });
     },
+    async returnPositionOfDrawing (x){
+      //this should be on close or refresh and position of component is not set
+      const response = await axios.post(`${API}/drawings/updateDrawingPos`, {
+        clientX: x.target.parentElement.parentElement.parentElement.parentElement.offsetLeft,
+        clientY: x.target.parentElement.parentElement.parentElement.parentElement.offsetTop,
+        drawingid: x.target.children[0].innerHTML,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.user.token}`
+        }
+      });
+    },
     async saveDrawing(e){
       this.addDrawing = false;
       //this.drawings.push({id: this.drawingsId, url: e});
@@ -509,8 +526,8 @@ export default {
       //SAVE TO DB
       // value too long for type character varying(1000)
       const response = await axios.post(`${API}/drawings/create`, {
-        clientX: 0,
-        clientY: 0,
+        clientX: 100,
+        clientY: 120,
         image: e,
       }, {
         headers: {

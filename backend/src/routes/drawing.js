@@ -105,4 +105,22 @@ router.post('/remove', async (ctx) => {
   };
 });
 
+router.post('/updateDrawingPos', async (ctx) =>{
+  const body = ctx.request.body;
+  const jwt = ctx.request.jwtPayload;
+
+  await db.Drawing.update({
+    clientX: body.clientX,
+    clientY: body.clientY
+  }, {
+    where: {
+      id: body.drawingid
+    }
+  });
+
+  ctx.body = {
+    success: true
+  };
+});
+
 export default router;
