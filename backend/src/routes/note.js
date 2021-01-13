@@ -110,8 +110,9 @@ router.post('/gettodo', async (ctx) => {
 router.post('/create', async (ctx) => {
   const body = ctx.request.body;
   const jwt = ctx.request.jwtPayload;
+  let note = null;
   if (body.type == "Normal") {
-    await db.Note.create({
+    note = await db.Note.create({
       title: body.title,
       text: body.text,
       color: body.color,
@@ -120,10 +121,10 @@ router.post('/create', async (ctx) => {
       imageURL: body.imageURL,
       userId: jwt.id,
       type: "Normal",
-      reminderDate: body.reminderDate
+      reminderDate: body.reminderDate == "null" ? null : body.reminderDate
     })
   } else {
-    const note = await db.Note.create({
+    note = await db.Note.create({
       title: body.title,
       text: body.text,
       color: body.color,
@@ -132,10 +133,13 @@ router.post('/create', async (ctx) => {
       imageURL: body.imageURL,
       userId: jwt.id,
       type: "Todo",
-      reminderDate: body.reminderDate
+      reminderDate: body.reminderDate == "null" ? null : body.reminderDate
     })
     // TODO: Use of transactions
-    body.todo.forEach(async element => {
+
+    let todos = body.todo.split(',');
+
+    todos.forEach(async element => {
       const td = await db.Todo.create({
         title: element,
         text: null,
@@ -146,6 +150,7 @@ router.post('/create', async (ctx) => {
   }
 
   ctx.body = {
+    noteId: note.id,
     success: true
   };
 });

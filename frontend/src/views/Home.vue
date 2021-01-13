@@ -434,7 +434,7 @@ export default {
     },
     async saveNote() {
       if (this.todo === "") this.type = "Normal";
-      else this.type = "todo";
+      else this.type = "Todo";
       if(this.image === "") this.image = "https://static8.depositphotos.com/1007173/1012/i/600/depositphotos_10129093-stock-photo-note-with-pin.jpg";
       const response = await axios.post(`${API}/notes/create`, {
         userid: this.user.id,
@@ -445,7 +445,7 @@ export default {
         color: 'rgba('+this.picker.r+', '+this.picker.g+', '+this.picker.b+', '+this.picker.a+')',
         imageURL: this.image,
         text: this.text,
-        todo: this.todo.split(','),
+        todo: this.todo,
         reminderDate: (this.reminder ? (this.date+" "+this.time+" UTC") : null),
       }, {
         headers: {
