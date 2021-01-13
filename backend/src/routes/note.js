@@ -111,7 +111,7 @@ router.post('/create', async (ctx) => {
   const body = ctx.request.body;
   const jwt = ctx.request.jwtPayload;
   let note = null;
-  let image = body.image ? /*Buffer.from(body.image.replace('data:image/png;base64,', ''), 'base64')*/body.image : null;
+  let image = body.image ? Buffer.from(body.image.replace('data:image/png;base64,', ''), 'base64') : null;
   if (body.type == "Normal") {
     note = await db.Note.create({
       title: body.title,
