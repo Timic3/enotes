@@ -38,7 +38,7 @@ router.post('/get', async (ctx) => {
         attributes: []
       }
     ],
-    attributes: ['id','title', 'text', 'type', 'color', 'clientX', 'clientY', 'imageURL', 'reminderDate'],
+    attributes: ['id','title', 'text', 'type', 'color', 'clientX', 'clientY', 'image', 'imageURL', 'reminderDate'],
     raw: true
   });
 
