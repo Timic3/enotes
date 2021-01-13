@@ -120,7 +120,7 @@ router.post('/create', async (ctx) => {
       imageURL: body.imageURL,
       userId: jwt.id,
       type: "Normal",
-      reminderDate: body.reminderDate
+      reminderDate: body.reminderDate == "null" ? null : body.reminderDate
     })
   } else {
     const note = await db.Note.create({
@@ -132,7 +132,7 @@ router.post('/create', async (ctx) => {
       imageURL: body.imageURL,
       userId: jwt.id,
       type: "Todo",
-      reminderDate: body.reminderDate
+      reminderDate: body.reminderDate == "null" ? null : body.reminderDate
     })
     // TODO: Use of transactions
 
