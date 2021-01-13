@@ -110,8 +110,9 @@ router.post('/gettodo', async (ctx) => {
 router.post('/create', async (ctx) => {
   const body = ctx.request.body;
   const jwt = ctx.request.jwtPayload;
+  let note = null;
   if (body.type == "Normal") {
-    await db.Note.create({
+    note = await db.Note.create({
       title: body.title,
       text: body.text,
       color: body.color,
@@ -123,7 +124,7 @@ router.post('/create', async (ctx) => {
       reminderDate: body.reminderDate == "null" ? null : body.reminderDate
     })
   } else {
-    const note = await db.Note.create({
+    note = await db.Note.create({
       title: body.title,
       text: body.text,
       color: body.color,
